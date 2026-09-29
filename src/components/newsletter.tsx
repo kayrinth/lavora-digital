@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { ArrowRight } from "./icons";
+import type { Dictionary } from "@/lib/dictionaries";
 
-export function Newsletter() {
+export function Newsletter({ t }: { t: Dictionary["newsletter"] }) {
   const [done, setDone] = useState(false);
 
   return (
@@ -15,21 +16,21 @@ export function Newsletter() {
       className="relative"
     >
       <label htmlFor="email" className="sr-only">
-        Email address
+        {t.label}
       </label>
       <input
         id="email"
         type="email"
         required
-        placeholder="Email Address.."
-        className="h-11 w-full rounded-full border border-line bg-background pr-32 pl-5 text-[13px] text-ink outline-none placeholder:text-muted focus:border-primary"
+        placeholder={t.placeholder}
+        className="h-11 w-full rounded-sm border border-line bg-background pe-28 ps-4 text-[13px] text-ink outline-none placeholder:text-muted focus:border-primary"
       />
       <button
         type="submit"
-        className="absolute top-1.5 right-1.5 inline-flex h-8 items-center gap-1.5 rounded-full bg-ink px-4 text-[12px] font-medium text-white transition hover:bg-ink/85"
+        className="absolute top-1.5 end-1.5 inline-flex h-8 items-center gap-1.5 rounded-sm bg-ink px-4 text-[12px] font-medium text-white transition hover:bg-primary"
       >
-        {done ? "Subscribed" : "Subscribe"}
-        {!done && <ArrowRight className="size-3.5" />}
+        {done ? t.subscribed : t.subscribe}
+        {!done && <ArrowRight className="size-3.5 rtl:rotate-180" />}
       </button>
     </form>
   );

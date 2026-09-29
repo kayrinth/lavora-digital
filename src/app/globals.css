@@ -28,6 +28,19 @@ body {
   font-family: var(--font-sans);
 }
 
+/* Inter carries no Arabic glyphs, so the Arabic build swaps the stack. */
+:lang(ar) body {
+  font-family: var(--font-arabic), var(--font-sans);
+}
+
+/* The marquee translates on X, so it has to run the other way when reading RTL. */
+[dir="rtl"] .animate-marquee {
+  animation-direction: reverse;
+}
+[dir="rtl"] .animate-marquee.\[animation-direction\:reverse\] {
+  animation-direction: normal;
+}
+
 /* Grain overlay reused by the hero + banner glows. */
 .grain::after {
   content: "";

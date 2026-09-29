@@ -94,3 +94,15 @@ export const Linkedin = (p: P) => (
     <path d="M12 16.5v-6m0 1.6a2.6 2.6 0 0 1 4.5 1.8v2.6" />
   </svg>
 );
+
+export const Menu = (p: P) => (
+  <svg {...base} {...p}>
+    <path d="M4 7h16M4 12h16M4 17h16" />
+  </svg>
+);
+
+export const Close = (p: P) => (
+  <svg {...base} {...p}>
+    <path d="M6 6l12 12M18 6L6 18" />
+  </svg>
+);

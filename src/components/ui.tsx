@@ -51,7 +51,8 @@ export function SpinBadge({
   size?: number;
   children: React.ReactNode;
 }) {
-  const ring = `${label} • `.repeat(3);
+  // The r=40 path fits roughly 46 characters at this size; more than that overlaps.
+  const ring = `${label} • `.repeat(Math.max(1, Math.floor(46 / (label.length + 3))));
   return (
     <Link
       href={href}
@@ -63,7 +64,7 @@ export function SpinBadge({
         <defs>
           <path id={id} d="M50,50 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0" />
         </defs>
-        <text className="fill-muted text-[7.5px] uppercase tracking-[0.22em]">
+        <text className="fill-muted text-[7.5px] uppercase tracking-[0.22em] [direction:ltr] rtl:tracking-normal">
           <textPath href={`#${id}`}>{ring}</textPath>
         </text>
       </svg>

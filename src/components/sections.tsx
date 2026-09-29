@@ -1,8 +1,13 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Container, Glow, PrimaryButton, SpinBadge } from "./ui";
+import { ContactForm } from "./contact-form";
+import { MobileMenu } from "./mobile-menu";
 import { Newsletter } from "./newsletter";
+import type { Dictionary, Locale } from "@/lib/dictionaries";
 import {
   ArrowDown,
+  ArrowRight,
   Chevron,
   Cursor,
   Gauge,
@@ -15,75 +20,101 @@ import {
   Youtube,
 } from "./icons";
 
+type P = { lang: Locale; t: Dictionary };
+
+/** Every in-app link carries the locale, so /ar never falls back to /en. */
+const href = (lang: Locale, path: string) => `/${lang}${path}`;
+
 /* ------------------------------------------------------------------ Navbar */
 
-const MENU = [
-  { label: "Home", href: "#top" },
-  { label: "Work", href: "#services" },
-  { label: "Service", href: "#services", dropdown: true },
-  { label: "About", href: "#process" },
-];
+export function Navbar({ lang, t }: P) {
+  const menu = [
+    { key: "home", label: t.nav.home, href: href(lang, "#top") },
+    { key: "work", label: t.nav.work, href: href(lang, "#services") },
+    { key: "about", label: t.nav.about, href: href(lang, "#process") },
+  ];
+  const services = t.services.items.map((s) => s.title);
+  const other: Locale = lang === "en" ? "ar" : "en";
 
-const SERVICE_LINKS = [
-  "Paid Social",
-  "Search & Shopping",
-  "Programmatic Display",
-  "Creative Studio",
-];
-
-export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-background/85 backdrop-blur">
       <Container className="flex h-16 items-center justify-between gap-6">
-        <Link href="#top" className="flex items-center gap-2.5">
-          <span className="grid size-7 place-items-center rounded-full bg-primary">
-            <span className="size-2.5 rounded-full bg-background" />
-          </span>
-          <span className="text-[15px] font-semibold tracking-tight">Orangely</span>
+        <Link href={href(lang, "#top")} className="flex items-center gap-2.5">
+          <Image
+            src="/lavora-logo.webp"
+            alt={t.brand}
+            width={36}
+            height={36}
+            priority
+            className="size-9 object-contain"
+          />
+          <span className="text-[15px] font-semibold tracking-tight">{t.brand}</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {MENU.map((item) =>
-            item.dropdown ? (
-              <div key={item.label} className="group relative">
-                <button className="flex items-center gap-1 text-[13px] text-muted transition group-hover:text-ink">
-                  {item.label}
-                  <Chevron className="size-3.5 transition group-hover:rotate-180" />
-                </button>
-                <div className="invisible absolute top-full left-1/2 w-56 -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                  <ul className="rounded-xl border border-line bg-background p-2 shadow-xl shadow-ink/5">
-                    {SERVICE_LINKS.map((s) => (
-                      <li key={s}>
-                        <Link
-                          href="#services"
-                          className="block rounded-lg px-3 py-2 text-[13px] text-muted transition hover:bg-primary-soft hover:text-ink"
-                        >
-                          {s}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ) : (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={
-                  item.label === "Home"
-                    ? "text-[13px] font-semibold text-ink"
-                    : "text-[13px] text-muted transition hover:text-ink"
-                }
-              >
-                {item.label}
-              </Link>
-            ),
-          )}
+          <Link href={menu[0].href} className="text-[13px] font-semibold text-ink">
+            {menu[0].label}
+          </Link>
+          <Link
+            href={menu[1].href}
+            className="text-[13px] text-muted transition hover:text-ink"
+          >
+            {menu[1].label}
+          </Link>
+
+          <div className="group relative">
+            <button className="flex items-center gap-1 text-[13px] text-muted transition group-hover:text-ink">
+              {t.nav.service}
+              <Chevron className="size-3.5 transition group-hover:rotate-180" />
+            </button>
+            <div className="invisible absolute top-full left-1/2 w-56 -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+              <ul className="rounded-xl border border-line bg-background p-2 shadow-xl shadow-ink/5">
+                {services.map((s) => (
+                  <li key={s}>
+                    <Link
+                      href={href(lang, "#services")}
+                      className="block rounded-lg px-3 py-2 text-start text-[13px] text-muted transition hover:bg-primary-soft hover:text-ink"
+                    >
+                      {s}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <Link
+            href={menu[2].href}
+            className="text-[13px] text-muted transition hover:text-ink"
+          >
+            {menu[2].label}
+          </Link>
         </nav>
 
-        <PrimaryButton href="#contact" className="px-3.5 py-1.5 text-[12px]">
-          Get a Proposal
-        </PrimaryButton>
+        <div className="flex items-center gap-1">
+          {/* Same page, other language. hreflang lets crawlers pair the two. */}
+          <Link
+            href={`/${other}`}
+            hrefLang={other}
+            lang={other}
+            className="hidden rounded-lg px-2.5 py-2 text-[12px] text-muted transition hover:text-ink sm:inline-block"
+          >
+            {t.nav.switchTo}
+          </Link>
+          <PrimaryButton href={href(lang, "#contact")} className="px-3.5 py-2 text-[12px]">
+            {t.nav.cta}
+          </PrimaryButton>
+          <MobileMenu
+            items={menu}
+            services={services}
+            servicesHref={href(lang, "#services")}
+            servicesLabel={t.nav.servicesLabel}
+            otherLocale={other}
+            otherLocaleLabel={t.nav.switchTo}
+            openLabel={t.nav.openMenu}
+            closeLabel={t.nav.closeMenu}
+          />
+        </div>
       </Container>
     </header>
   );
@@ -91,7 +122,7 @@ export function Navbar() {
 
 /* -------------------------------------------------------------------- Hero */
 
-export function Hero() {
+export function Hero({ lang, t }: P) {
   return (
     <section id="top" className="relative overflow-hidden">
       <Glow className="top-[-8rem] left-[38%] size-[520px] opacity-65" />
@@ -99,24 +130,28 @@ export function Hero() {
       <Container className="relative grid gap-16 pt-20 pb-24 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10 lg:pt-24 lg:pb-24">
         <div>
           <h1 className="max-w-xl text-[42px] leading-[1.08] font-light tracking-tight sm:text-[56px] lg:text-[62px]">
-            <span className="font-semibold">Amplify</span> your
+            <span className="font-semibold">{t.hero.headlineStrong}</span>{" "}
+            {t.hero.headlineRest}
             <br />
-            brand to every
+            {t.hero.headlineLine2}
             <br />
             <span className="inline-flex items-center gap-5">
               <span aria-hidden className="hidden h-px w-24 bg-ink/60 sm:block" />
-              audience
+              {t.hero.headlineLine3}
             </span>
           </h1>
 
           <p className="mt-7 max-w-sm text-[14px] leading-relaxed text-muted">
-            A digital advertising agency that plans, buys and optimises media — and
-            reports on every impression it spends.
+            {t.hero.lead}
           </p>
 
           <div className="mt-12 flex items-center gap-10">
             <div className="group">
-              <SpinBadge id="hero-ring" href="#collaboration" label="see how we work">
+              <SpinBadge
+                id="hero-ring"
+                href={href(lang, "#collaboration")}
+                label={t.hero.badge}
+              >
                 <ArrowDown className="size-5" />
               </SpinBadge>
             </div>
@@ -129,9 +164,9 @@ export function Hero() {
               ].map(({ Icon, label }) => (
                 <li key={label}>
                   <Link
-                    href="#contact"
+                    href={href(lang, "#contact")}
                     aria-label={label}
-                    className="grid size-9 place-items-center rounded-full border border-line text-muted transition hover:border-primary hover:text-primary"
+                    className="grid size-11 place-items-center rounded-full border border-line text-muted transition hover:border-primary hover:text-primary"
                   >
                     <Icon className="size-4" />
                   </Link>
@@ -143,29 +178,26 @@ export function Hero() {
 
         <div className="flex flex-col gap-10 lg:pt-4">
           <div className="grid grid-cols-2 divide-x divide-line rounded-xl border border-line bg-surface/80 backdrop-blur">
-            {[
-              { n: "2.4B+", l: "Impressions served" },
-              { n: "900+", l: "Campaigns launched" },
-            ].map((s) => (
-              <div key={s.n} className="px-6 py-6">
-                <p className="text-[28px] leading-none font-normal">{s.n}</p>
+            {t.hero.stats.map((s) => (
+              <div key={s.l} className="px-6 py-6">
+                <p dir="ltr" className="text-[28px] leading-none font-normal">
+                  {s.n}
+                </p>
                 <p className="mt-2 text-[12px] text-muted">{s.l}</p>
               </div>
             ))}
           </div>
 
-          <figure className="lg:text-right">
+          <figure className="lg:text-end">
             <span aria-hidden className="mb-5 block h-px w-full bg-line" />
             <blockquote className="text-[13px] leading-relaxed text-muted">
-              &ldquo;Orangely rebuilt our paid funnel from scratch. Cost per acquisition
-              dropped 41% in a single quarter, and the reporting is finally something we
-              can act on&rdquo;
+              &ldquo;{t.hero.quote}&rdquo;
             </blockquote>
             <figcaption className="mt-5">
               <span className="block text-[13px] font-semibold text-ink">
-                Paul Yayuk Reyhan
+                {t.hero.quoteName}
               </span>
-              <span className="block text-[12px] text-muted">CMO of Northwind</span>
+              <span className="block text-[12px] text-muted">{t.hero.quoteRole}</span>
             </figcaption>
           </figure>
         </div>
@@ -176,42 +208,39 @@ export function Hero() {
 
 /* ----------------------------------------------------------- How we operate */
 
-const FEATURES = [
-  { Icon: Target, text: "Audiences built from first-party data, never guesswork" },
-  { Icon: TrendUp, text: "Every impression tracked through to revenue" },
-  { Icon: Megaphone, text: "One message, tuned per channel and placement" },
-  { Icon: Gauge, text: "Weekly optimisation cycles that compound results" },
-];
+const FEATURE_ICONS = [Target, TrendUp, Megaphone, Gauge];
 
-export function Collaboration() {
+export function Collaboration({ t }: { t: Dictionary }) {
   return (
     <section id="collaboration" className="scroll-mt-16 pt-16 pb-24 lg:pt-20 lg:pb-32">
       <Container>
         <div className="grid gap-8 lg:grid-cols-2 lg:items-end">
           <h2 className="max-w-md text-[32px] leading-[1.15] font-light tracking-tight sm:text-[38px]">
-            Media buying built on <span className="font-semibold">evidence</span>
+            {t.collaboration.titleLead}{" "}
+            <span className="font-semibold">{t.collaboration.titleStrong}</span>
           </h2>
-          <p className="max-w-md text-[14px] leading-relaxed text-muted lg:justify-self-end lg:text-right">
-            We start with your data, not a template. Audience research, creative testing
-            and clean measurement run on a fixed cadence, so budget always moves toward
-            what is working.
+          <p className="max-w-md text-[14px] leading-relaxed text-muted lg:justify-self-end lg:text-end">
+            {t.collaboration.body}
           </p>
         </div>
 
         <ul className="mt-14 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-          {FEATURES.map(({ Icon, text }) => (
-            <li
-              key={text}
-              className="group flex flex-col items-center gap-5 bg-surface px-7 py-10 text-center transition hover:bg-primary-soft/60"
-            >
-              <span className="grid size-11 place-items-center rounded-[10px] bg-background text-primary shadow-sm shadow-ink/5 transition group-hover:-translate-y-0.5">
-                <Icon className="size-5" />
-              </span>
-              <p className="max-w-[18ch] text-[12.5px] leading-relaxed text-muted">
-                {text}
-              </p>
-            </li>
-          ))}
+          {t.collaboration.features.map((text, i) => {
+            const Icon = FEATURE_ICONS[i];
+            return (
+              <li
+                key={text}
+                className="group flex items-center gap-4 bg-surface px-6 py-5 text-start transition hover:bg-primary-soft/60 sm:flex-col sm:gap-5 sm:px-7 sm:py-10 sm:text-center"
+              >
+                <span className="grid size-11 shrink-0 place-items-center rounded-[10px] bg-background text-primary shadow-sm shadow-ink/5 transition group-hover:-translate-y-0.5">
+                  <Icon className="size-5" />
+                </span>
+                <p className="text-[13px] leading-relaxed text-muted sm:max-w-[18ch] sm:text-[12.5px]">
+                  {text}
+                </p>
+              </li>
+            );
+          })}
         </ul>
       </Container>
     </section>
@@ -220,38 +249,13 @@ export function Collaboration() {
 
 /* ---------------------------------------------------------------- Services */
 
-const SERVICES = [
-  {
-    no: "01",
-    title: "Paid Social",
-    desc: "Full-funnel campaigns on Meta, TikTok and LinkedIn that scale profitably",
-    art: "social",
-  },
-  {
-    no: "02",
-    title: "Search & Shopping",
-    desc: "Google and Bing campaigns engineered around buying intent and margin",
-    art: "search",
-  },
-  {
-    no: "03",
-    title: "Programmatic Display",
-    desc: "The right screen at the right moment across the open web and CTV",
-    art: "display",
-  },
-  {
-    no: "04",
-    title: "Creative Studio",
-    desc: "Ad creative produced, tested and iterated on a weekly cadence",
-    art: "creative",
-  },
-] as const;
+const ART = ["ads", "web", "search"] as const;
 
-function ServiceArt({ kind }: { kind: (typeof SERVICES)[number]["art"] }) {
+function ServiceArt({ kind }: { kind: (typeof ART)[number] }) {
   const common = "absolute inset-0";
   return (
     <div className="relative aspect-square overflow-hidden bg-surface">
-      {kind === "social" && (
+      {kind === "ads" && (
         <div className={`${common} grid place-items-center bg-gradient-to-br from-primary-soft to-secondary-soft p-10`}>
           {/* Sponsored post in a feed */}
           <div className="w-full rounded-xl border border-line bg-background p-3 shadow-sm">
@@ -265,9 +269,34 @@ function ServiceArt({ kind }: { kind: (typeof SERVICES)[number]["art"] }) {
             <div className="mt-3 h-20 rounded-lg bg-primary/25" />
             <div className="mt-3 flex items-center justify-between">
               <div className="h-1.5 w-20 rounded bg-line" />
-              <span className="rounded bg-ink px-2 py-1 text-[7px] text-white">
-                Learn more
-              </span>
+              <span className="size-4 w-12 rounded bg-ink" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {kind === "web" && (
+        <div className={`${common} grid place-items-center bg-gradient-to-b from-secondary-soft to-primary-soft p-10`}>
+          {/* Browser window with a hero section taking shape */}
+          <div className="w-full overflow-hidden rounded-lg border border-line bg-background shadow-sm">
+            <div className="flex items-center gap-1.5 border-b border-line px-3 py-2">
+              <span className="size-1.5 rounded-full bg-line" />
+              <span className="size-1.5 rounded-full bg-line" />
+              <span className="size-1.5 rounded-full bg-line" />
+              <div className="ms-2 h-1.5 flex-1 rounded bg-line" />
+            </div>
+            <div className="space-y-2 p-3">
+              <div className="h-1.5 w-1/2 rounded bg-ink/70" />
+              <div className="h-1 w-3/4 rounded bg-line" />
+              <div className="flex gap-2 pt-1">
+                <span className="h-4 w-12 rounded bg-primary/70" />
+                <span className="h-4 w-10 rounded border border-line" />
+              </div>
+              <div className="grid grid-cols-3 gap-1.5 pt-2">
+                <div className="h-8 rounded bg-surface" />
+                <div className="h-8 rounded bg-secondary/40" />
+                <div className="h-8 rounded bg-surface" />
+              </div>
             </div>
           </div>
         </div>
@@ -282,9 +311,7 @@ function ServiceArt({ kind }: { kind: (typeof SERVICES)[number]["art"] }) {
               <div className="h-1.5 w-2/3 rounded bg-line" />
             </div>
             <div className="rounded-lg border border-primary/40 bg-background p-3">
-              <span className="text-[7px] font-semibold tracking-wide text-primary uppercase">
-                Ad
-              </span>
+              <span className="block h-1.5 w-4 rounded bg-primary" />
               <div className="mt-2 h-1.5 w-3/4 rounded bg-ink/70" />
               <div className="mt-1.5 h-1 w-full rounded bg-line" />
               <div className="mt-1 h-1 w-1/2 rounded bg-line" />
@@ -297,64 +324,38 @@ function ServiceArt({ kind }: { kind: (typeof SERVICES)[number]["art"] }) {
           </div>
         </div>
       )}
-
-      {kind === "display" && (
-        <div className={`${common} grain grid place-items-center bg-gradient-to-b from-primary-soft to-secondary-soft p-10`}>
-          {/* Banner placements across screens */}
-          <div className="grid w-full grid-cols-3 gap-2">
-            <div className="col-span-2 h-14 rounded-lg bg-background/90 p-2">
-              <div className="h-full rounded bg-primary/30" />
-            </div>
-            <div className="h-14 rounded-lg bg-background/90 p-2">
-              <div className="h-full rounded bg-secondary/50" />
-            </div>
-            <div className="h-20 rounded-lg bg-background/90 p-2">
-              <div className="h-full rounded bg-secondary/40" />
-            </div>
-            <div className="col-span-2 h-20 rounded-lg bg-background/90 p-2">
-              <div className="h-full rounded bg-primary/25" />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {kind === "creative" && (
-        <div className={`${common} grid place-items-center bg-gradient-to-bl from-primary-soft via-background to-surface`}>
-          <svg viewBox="0 0 120 120" className="size-2/3">
-            <circle cx="45" cy="46" r="25" fill="#5BC0EB" opacity=".7" />
-            <rect x="52" y="52" width="44" height="44" rx="12" fill="#FFD23F" opacity=".85" />
-            <path d="M20 96c12-24 30-28 48-12" stroke="#111" strokeWidth="2" fill="none" strokeLinecap="round" />
-          </svg>
-        </div>
-      )}
     </div>
   );
 }
 
-export function Services() {
+export function Services({ t }: { t: Dictionary }) {
   return (
     <section id="services" className="scroll-mt-16 pb-24 lg:pb-32">
       <Container>
         <h2 className="text-center text-[32px] leading-tight font-light tracking-tight sm:text-[38px]">
-          Every channel your <span className="font-semibold">buyers</span> are on
+          {t.services.titleLead}{" "}
+          <span className="font-semibold">{t.services.titleStrong}</span>
+          {t.services.titleTail ? ` ${t.services.titleTail}` : null}
         </h2>
       </Container>
 
       <div className="no-scrollbar mt-14 flex snap-x snap-mandatory gap-px overflow-x-auto border-y border-line bg-line">
-        {SERVICES.map((s) => (
+        {t.services.items.map((s, i) => (
           <article
-            key={s.no}
-            className="group w-[78vw] shrink-0 snap-start bg-background sm:w-[46vw] lg:w-[32vw] xl:w-[30rem]"
+            key={s.title}
+            className="group w-[78vw] shrink-0 snap-start bg-background sm:w-[52vw] lg:w-[38vw] xl:w-[34rem]"
           >
             <div className="overflow-hidden">
               <div className="transition duration-500 group-hover:scale-[1.03]">
-                <ServiceArt kind={s.art} />
+                <ServiceArt kind={ART[i]} />
               </div>
             </div>
             <div className="border-t border-line px-6 py-7">
               <div className="flex items-baseline justify-between gap-4">
                 <h3 className="text-[19px] font-medium">{s.title}</h3>
-                <span className="text-[19px] text-muted">{s.no}</span>
+                <span dir="ltr" className="text-[19px] text-muted">
+                  0{i + 1}
+                </span>
               </div>
               <p className="mt-3 max-w-[34ch] text-[13px] leading-relaxed text-muted">
                 {s.desc}
@@ -365,7 +366,11 @@ export function Services() {
       </div>
 
       <Container>
-        <p className="mt-5 text-right text-[12px] text-muted">Scroll to see more →</p>
+        <p className="mt-5 flex items-center justify-end gap-1.5 text-[12px] text-muted">
+          {t.services.scrollHint}
+          {/* Rotated rather than a literal arrow, so it points the reading way in Arabic. */}
+          <ArrowRight className="size-3.5 rtl:rotate-180" />
+        </p>
       </Container>
     </section>
   );
@@ -373,7 +378,7 @@ export function Services() {
 
 /* ------------------------------------------------------------- Work banner */
 
-export function WorkBanner() {
+export function WorkBanner({ lang, t }: P) {
   return (
     <section className="relative overflow-hidden border-y border-line bg-surface">
       <Glow className="top-[-10rem] left-[-12rem] size-[480px] opacity-80" />
@@ -382,11 +387,10 @@ export function WorkBanner() {
       <Container className="relative grid items-center gap-12 py-20 lg:grid-cols-[0.85fr_1.15fr] lg:py-24">
         <div>
           <h2 className="max-w-sm text-[30px] leading-[1.15] font-light tracking-tight sm:text-[38px]">
-            Always-on media, <span className="font-semibold">always improving</span>
+            {t.banner.titleLead}{" "}
+            <span className="font-semibold">{t.banner.titleStrong}</span>
           </h2>
-          <p className="mt-5 text-[14px] text-muted">
-            Optimised daily, reported weekly, reviewed with you every month.
-          </p>
+          <p className="mt-5 text-[14px] text-muted">{t.banner.body}</p>
         </div>
 
         <div className="relative flex items-end justify-center gap-4">
@@ -429,9 +433,14 @@ export function WorkBanner() {
             <div className="h-1.5 rounded-b-md bg-line" />
           </div>
 
-          <div className="group absolute -top-6 -right-2 lg:-top-10 lg:right-0">
-            <SpinBadge id="video-ring" href="#contact" label="see our results" size={104}>
-              <Play className="size-5" />
+          <div className="group absolute -top-4 end-0 origin-top scale-[0.72] sm:scale-100 lg:-top-10">
+            <SpinBadge
+              id="video-ring"
+              href={href(lang, "#contact")}
+              label={t.banner.badge}
+              size={104}
+            >
+              <Play className="size-5 rtl:rotate-180" />
             </SpinBadge>
           </div>
         </div>
@@ -442,54 +451,34 @@ export function WorkBanner() {
 
 /* ------------------------------------------------------------ Work process */
 
-const STEPS = [
-  {
-    no: "1",
-    title: "Audit",
-    desc: "We map your funnel, tracking and past spend before touching a budget",
-  },
-  {
-    no: "2",
-    title: "Strategy",
-    desc: "Channel mix, audiences and budget split agreed with you up front",
-  },
-  {
-    no: "3",
-    title: "Launch",
-    desc: "Creative, tracking and campaigns go live with clean measurement",
-  },
-  {
-    no: "4",
-    title: "Scale",
-    desc: "Weekly optimisation until the cost per result stops falling",
-  },
-];
-
-export function Process() {
+export function Process({ lang, t }: P) {
   return (
     <section id="process" className="scroll-mt-16 py-24 lg:py-32">
       <Container className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div>
           <h2 className="max-w-xs text-[32px] leading-[1.15] font-light tracking-tight sm:text-[38px]">
-            How we turn <span className="font-semibold">budget</span> into growth
+            {t.process.titleLead}{" "}
+            <span className="font-semibold">{t.process.titleStrong}</span>{" "}
+            {t.process.titleTail}
           </h2>
           <p className="mt-6 max-w-xs text-[14px] leading-relaxed text-muted">
-            A clear four-step structure, so you always know what your spend is doing and
-            what happens next.
+            {t.process.body}
           </p>
-          <PrimaryButton href="#contact" className="mt-8">
-            Get a Proposal
+          <PrimaryButton href={href(lang, "#contact")} className="mt-8">
+            {t.process.cta}
           </PrimaryButton>
         </div>
 
         <ul className="border-t border-line">
-          {STEPS.map((s) => (
+          {t.process.steps.map((s, i) => (
             <li
-              key={s.no}
+              key={s.title}
               className="group relative border-b border-line transition hover:bg-secondary-soft"
             >
               <div className="flex items-start gap-6 px-4 py-6">
-                <span className="w-6 pt-0.5 text-[13px] text-muted">{s.no}</span>
+                <span dir="ltr" className="w-6 pt-0.5 text-[13px] text-muted">
+                  {i + 1}
+                </span>
                 <span aria-hidden className="mt-1 h-10 w-px bg-line" />
                 <div>
                   <h3 className="text-[18px] font-medium transition group-hover:text-primary">
@@ -502,7 +491,7 @@ export function Process() {
               {/* Report preview, revealed on hover */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute top-1/2 right-6 hidden w-44 -translate-y-1/2 rotate-[-8deg] rounded-lg border border-line bg-background p-2 opacity-0 shadow-xl shadow-ink/10 transition duration-300 group-hover:rotate-[-3deg] group-hover:opacity-100 lg:block"
+                className="pointer-events-none absolute top-1/2 end-6 hidden w-44 -translate-y-1/2 rotate-[-8deg] rounded-lg border border-line bg-background p-2 opacity-0 shadow-xl shadow-ink/10 transition duration-300 group-hover:rotate-[-3deg] group-hover:opacity-100 lg:block"
               >
                 <div className="space-y-1.5">
                   <div className="h-1.5 w-1/3 rounded bg-primary" />
@@ -540,52 +529,51 @@ function Circle({ children }: { children: React.ReactNode }) {
   );
 }
 
-function RowOne() {
+function RowOne({ t }: { t: Dictionary }) {
   return (
-    <div className="flex shrink-0 items-center gap-10 pr-10 text-[44px] font-light tracking-tight sm:text-[58px]">
-      <span>Reach</span>
+    <div className="flex shrink-0 items-center gap-10 pe-10 text-[44px] font-light tracking-tight sm:text-[58px]">
+      <span>{t.marquee.word1}</span>
       <Circle>
-        <Megaphone className="size-7" />
+        <Megaphone className="size-7 rtl:-scale-x-100" />
       </Circle>
-      <span>the right</span>
+      <span>{t.marquee.word2}</span>
     </div>
   );
 }
 
-function RowTwo() {
+function RowTwo({ t }: { t: Dictionary }) {
   return (
-    <div className="flex shrink-0 items-center gap-10 pr-10 text-[44px] font-light tracking-tight sm:text-[58px]">
+    <div className="flex shrink-0 items-center gap-10 pe-10 text-[44px] font-light tracking-tight sm:text-[58px]">
       <Circle>
         <Target className="size-7" />
       </Circle>
-      <span>audience</span>
+      <span>{t.marquee.word3}</span>
       <span className="max-w-[22rem] rounded-full border border-line px-7 py-4 text-[12px] leading-relaxed text-muted">
-        Great targeting only pays off when the creative earns the click and the landing
-        page earns the sale
+        {t.marquee.note}
       </span>
       <Circle>
-        <Cursor className="size-7 text-secondary" />
+        <Cursor className="size-7 text-secondary rtl:-scale-x-100" />
       </Circle>
     </div>
   );
 }
 
-export function Marquee() {
+export function Marquee({ t }: { t: Dictionary }) {
   return (
-    <section aria-label="Reach the right audience" className="border-y border-line py-4">
+    <section aria-label={t.marquee.label} className="border-y border-line py-4">
       <div className="flex overflow-hidden border-b border-line py-6">
         <div className="flex animate-marquee">
-          <RowOne />
-          <RowOne />
-          <RowOne />
-          <RowOne />
+          <RowOne t={t} />
+          <RowOne t={t} />
+          <RowOne t={t} />
+          <RowOne t={t} />
         </div>
       </div>
       <div className="flex overflow-hidden py-6">
         <div className="flex animate-marquee [animation-direction:reverse]">
-          <RowTwo />
-          <RowTwo />
-          <RowTwo />
+          <RowTwo t={t} />
+          <RowTwo t={t} />
+          <RowTwo t={t} />
         </div>
       </div>
     </section>
@@ -594,7 +582,7 @@ export function Marquee() {
 
 /* --------------------------------------------------------------------- CTA */
 
-export function Cta() {
+export function Cta({ t }: { t: Dictionary }) {
   return (
     <section id="contact" className="relative scroll-mt-16 overflow-hidden">
       <Glow className="top-1/2 left-[-10rem] size-[420px] -translate-y-1/2 opacity-80" />
@@ -602,14 +590,15 @@ export function Cta() {
 
       <Container className="relative py-24 text-center lg:py-32">
         <h2 className="text-[32px] leading-tight font-light tracking-tight sm:text-[40px]">
-          Let&apos;s plan your <span className="font-semibold">next</span> campaign
+          {t.cta.titleLead} <span className="font-semibold">{t.cta.titleStrong}</span>{" "}
+          {t.cta.titleTail}
         </h2>
         <p className="mx-auto mt-5 max-w-md text-[14px] leading-relaxed text-muted">
-          Send us your current numbers and we&apos;ll come back with where the waste is.
+          {t.cta.body}
         </p>
-        <PrimaryButton href="mailto:hello@orangely.studio" withArrow className="mt-8">
-          Get a Proposal
-        </PrimaryButton>
+        <div className="mt-10">
+          <ContactForm t={t.form} />
+        </div>
       </Container>
     </section>
   );
@@ -617,20 +606,11 @@ export function Cta() {
 
 /* ------------------------------------------------------------------ Footer */
 
-const FOOTER_LINKS = [
-  {
-    title: "Services",
-    items: ["Paid Social", "Search & Shopping", "Programmatic", "Creative Studio"],
-  },
-  { title: "Company", items: ["About", "Case Studies", "Careers", "Contact"] },
-  { title: "Connect", items: ["Instagram", "LinkedIn", "YouTube"] },
-];
-
-export function Footer() {
+export function Footer({ lang, t }: P) {
   return (
     <footer className="border-t border-line bg-background">
-      <Container className="grid gap-12 py-16 lg:grid-cols-[repeat(3,auto)_1fr] lg:gap-16">
-        {FOOTER_LINKS.map((col) => (
+      <Container className="grid grid-cols-2 gap-x-6 gap-y-10 py-16 lg:grid-cols-[repeat(3,auto)_1fr] lg:gap-16">
+        {t.footer.columns.map((col) => (
           <div key={col.title}>
             <h3 className="text-[13px] font-semibold tracking-[0.12em] uppercase">
               {col.title}
@@ -638,7 +618,10 @@ export function Footer() {
             <ul className="mt-5 space-y-3">
               {col.items.map((i) => (
                 <li key={i}>
-                  <Link href="#contact" className="text-[13px] text-muted transition hover:text-ink">
+                  <Link
+                    href={href(lang, "#contact")}
+                    className="inline-flex min-h-[36px] items-center text-[13px] text-muted transition hover:text-ink"
+                  >
                     {i}
                   </Link>
                 </li>
@@ -647,16 +630,15 @@ export function Footer() {
           </div>
         ))}
 
-        <div className="lg:max-w-sm lg:justify-self-end">
+        <div className="col-span-2 lg:col-span-1 lg:max-w-sm lg:justify-self-end">
           <h3 className="text-[13px] font-semibold tracking-[0.12em] uppercase">
-            Stay updated
+            {t.footer.stayUpdated}
           </h3>
           <div className="mt-5">
-            <Newsletter />
+            <Newsletter t={t.newsletter} />
           </div>
           <p className="mt-4 text-[11.5px] leading-relaxed text-muted">
-            Occasional emails from Orangely on ad platform changes and what is working in
-            our accounts. Unsubscribe from any one of them.
+            {t.footer.newsletterNote}
           </p>
         </div>
       </Container>
@@ -664,20 +646,24 @@ export function Footer() {
       <Container>
         <div className="flex flex-col gap-6 border-t border-line py-8 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-lg">
-            <p className="text-[13px] font-semibold">
-              ©2026 Orangely All rights reserved.
-            </p>
+            <p className="text-[13px] font-semibold">{t.footer.rights}</p>
             <p className="mt-2 text-[11.5px] leading-relaxed text-muted">
-              Orangely is a digital advertising agency that plans, buys and optimises
-              media for brands that care what every impression returns.
+              {t.footer.blurb}
             </p>
           </div>
           <div className="flex gap-6">
-            {["Terms", "Privacy"].map((l) => (
-              <Link key={l} href="#contact" className="text-[12px] text-muted transition hover:text-ink">
-                {l}
-              </Link>
-            ))}
+            <Link
+              href={href(lang, "/terms")}
+              className="text-[12px] text-muted transition hover:text-ink"
+            >
+              {t.footer.terms}
+            </Link>
+            <Link
+              href={href(lang, "/privacy")}
+              className="text-[12px] text-muted transition hover:text-ink"
+            >
+              {t.footer.privacy}
+            </Link>
           </div>
         </div>
       </Container>
