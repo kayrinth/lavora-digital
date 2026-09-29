@@ -34,21 +34,20 @@ const en = {
   },
 
   hero: {
-    headlineStrong: "Amplify",
-    headlineRest: "your",
-    headlineLine2: "brand to every",
-    headlineLine3: "audience",
+    // One emphasised noun per line keeps the light/semibold motif of the old headline.
+    headline: [
+      { lead: "Build your", strong: "brand" },
+      { lead: "Grow your", strong: "business" },
+      { lead: "Shape your", strong: "future" },
+    ],
     lead:
-      "A digital advertising agency that plans, buys and optimises media, and reports on every impression it spends.",
+      "Lavora Digital is a full-service digital agency specializing in advertising, digital marketing, and web development, helping brands connect with their audience, grow their business, and build meaningful digital experiences.",
+    imageAlt: "A camera operator on a lit studio set, signalling to the crew",
     badge: "see how we work",
     stats: [
-      { n: "2.4B+", l: "Impressions served" },
-      { n: "900+", l: "Campaigns launched" },
+      { n: "100+", l: "Impressions served" },
+      { n: "500+", l: "Campaigns launched" },
     ],
-    quote:
-      "La Vora Digital rebuilt our paid funnel from scratch. Cost per acquisition dropped 41% in a single quarter, and the reporting is finally something we can act on",
-    quoteName: "Paul Yayuk Reyhan",
-    quoteRole: "CMO of Northwind",
   },
 
   collaboration: {
@@ -68,7 +67,8 @@ const en = {
     titleLead: "Every channel your",
     titleStrong: "buyers",
     titleTail: "are on",
-    scrollHint: "Scroll to see more",
+    adsAlt: "A man leaping with a bass guitar above a phone, hands reaching out of its screen among floating hearts and emoji",
+    webAlt: "Website designs shown on a laptop and two floating browser screens",
     items: [
       {
         title: "Advertising Agency",
@@ -207,21 +207,20 @@ const ar: Dictionary = {
   },
 
   hero: {
-    headlineStrong: "أوصل",
-    headlineRest: "علامتك",
-    headlineLine2: "إلى كل",
-    headlineLine3: "جمهور",
+    // Arabic carries "your" as a suffix, so the possessed noun is the emphasised word.
+    headline: [
+      { lead: "ابنِ", strong: "علامتك" },
+      { lead: "نمِّ", strong: "أعمالك" },
+      { lead: "اصنع", strong: "مستقبلك" },
+    ],
     lead:
-      "وكالة إعلانات رقمية تخطط وتشتري وتحسّن الوسائط، وتقدم تقريرًا عن كل ظهور تنفق عليه.",
+      "لا فورا ديجيتال وكالة رقمية متكاملة الخدمات متخصصة في الإعلانات والتسويق الرقمي وتطوير المواقع، تساعد العلامات على الوصول إلى جمهورها، وتنمية أعمالها، وبناء تجارب رقمية ذات أثر.",
+    imageAlt: "مصوّر في استوديو مضاء يشير إلى فريق العمل",
     badge: "كيف نعمل",
     stats: [
-      { n: "2.4B+", l: "ظهور إعلاني" },
-      { n: "900+", l: "حملة أُطلقت" },
+      { n: "١٠٠+", l: "ظهور إعلاني" },
+      { n: "٥٠٠+", l: "حملة أُطلقت" },
     ],
-    quote:
-      "أعادت لا فورا ديجيتال بناء مسار الشراء المدفوع لدينا من الصفر. انخفضت تكلفة الاستحواذ 41% خلال ربع واحد، وأصبحت التقارير أخيرًا شيئًا يمكننا التصرف بناءً عليه",
-    quoteName: "Paul Yayuk Reyhan",
-    quoteRole: "مدير التسويق في Northwind",
   },
 
   collaboration: {
@@ -241,7 +240,8 @@ const ar: Dictionary = {
     titleLead: "كل قناة يتواجد فيها",
     titleStrong: "عملاؤك",
     titleTail: "",
-    scrollHint: "مرّر لرؤية المزيد",
+    adsAlt: "رجل يقفز حاملًا غيتارًا فوق هاتف تمتد من شاشته أيدٍ كثيرة وتحيط به قلوب وإيموجي عائمة",
+    webAlt: "تصاميم مواقع معروضة على حاسوب محمول وشاشتَي متصفح عائمتين",
     items: [
       {
         title: "وكالة إعلانات",

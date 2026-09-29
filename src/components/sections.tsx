@@ -7,17 +7,13 @@ import { Newsletter } from "./newsletter";
 import type { Dictionary, Locale } from "@/lib/dictionaries";
 import {
   ArrowDown,
-  ArrowRight,
   Chevron,
   Cursor,
   Gauge,
-  Instagram,
-  Linkedin,
   Megaphone,
   Play,
   Target,
   TrendUp,
-  Youtube,
 } from "./icons";
 
 type P = { lang: Locale; t: Dictionary };
@@ -127,57 +123,21 @@ export function Hero({ lang, t }: P) {
     <section id="top" className="relative overflow-hidden">
       <Glow className="top-[-8rem] left-[38%] size-[520px] opacity-65" />
 
-      <Container className="relative grid gap-16 pt-20 pb-24 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10 lg:pt-24 lg:pb-24">
+      <Container className="relative grid items-center gap-12 pt-20 pb-24 lg:grid-cols-2 lg:gap-12 lg:pt-24">
         <div>
-          <h1 className="max-w-xl text-[42px] leading-[1.08] font-light tracking-tight sm:text-[56px] lg:text-[62px]">
-            <span className="font-semibold">{t.hero.headlineStrong}</span>{" "}
-            {t.hero.headlineRest}
-            <br />
-            {t.hero.headlineLine2}
-            <br />
-            <span className="inline-flex items-center gap-5">
-              <span aria-hidden className="hidden h-px w-24 bg-ink/60 sm:block" />
-              {t.hero.headlineLine3}
-            </span>
+          <h1 className="max-w-2xl text-[36px] leading-[1.1] font-light tracking-tight sm:text-[52px] lg:text-[42px] xl:text-[52px]">
+            {t.hero.headline.map((line) => (
+              <span key={line.strong} className="block">
+                {line.lead} <span className="font-semibold">{line.strong}</span>
+              </span>
+            ))}
           </h1>
 
-          <p className="mt-7 max-w-sm text-[14px] leading-relaxed text-muted">
+          <p className="mt-7 max-w-xl text-[14px] leading-relaxed text-muted">
             {t.hero.lead}
           </p>
 
-          <div className="mt-12 flex items-center gap-10">
-            <div className="group">
-              <SpinBadge
-                id="hero-ring"
-                href={href(lang, "#collaboration")}
-                label={t.hero.badge}
-              >
-                <ArrowDown className="size-5" />
-              </SpinBadge>
-            </div>
-
-            <ul className="flex items-center gap-3">
-              {[
-                { Icon: Instagram, label: "Instagram" },
-                { Icon: Youtube, label: "YouTube" },
-                { Icon: Linkedin, label: "LinkedIn" },
-              ].map(({ Icon, label }) => (
-                <li key={label}>
-                  <Link
-                    href={href(lang, "#contact")}
-                    aria-label={label}
-                    className="grid size-11 place-items-center rounded-full border border-line text-muted transition hover:border-primary hover:text-primary"
-                  >
-                    <Icon className="size-4" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-10 lg:pt-4">
-          <div className="grid grid-cols-2 divide-x divide-line rounded-xl border border-line bg-surface/80 backdrop-blur">
+          <div className="mt-8 grid max-w-md grid-cols-2 divide-x divide-line rounded-xl border border-line bg-surface/80 backdrop-blur">
             {t.hero.stats.map((s) => (
               <div key={s.l} className="px-6 py-6">
                 <p dir="ltr" className="text-[28px] leading-none font-normal">
@@ -187,19 +147,32 @@ export function Hero({ lang, t }: P) {
               </div>
             ))}
           </div>
+        </div>
 
-          <figure className="lg:text-end">
-            <span aria-hidden className="mb-5 block h-px w-full bg-line" />
-            <blockquote className="text-[13px] leading-relaxed text-muted">
-              &ldquo;{t.hero.quote}&rdquo;
-            </blockquote>
-            <figcaption className="mt-5">
-              <span className="block text-[13px] font-semibold text-ink">
-                {t.hero.quoteName}
-              </span>
-              <span className="block text-[12px] text-muted">{t.hero.quoteRole}</span>
-            </figcaption>
-          </figure>
+        <div className="relative">
+          {/* The source is a wide panorama, so the frame crops it rather than letterboxing. */}
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
+            <Image
+              src="/hero1.webp"
+              alt={t.hero.imageAlt}
+              fill
+              priority
+              sizes="(min-width: 1024px) 500px, 100vw"
+              className="object-cover object-[55%_50%]"
+            />
+          </div>
+
+          {/* The disc carries the page background so the ring text stays legible off the photo. */}
+          <div className="group absolute -bottom-7 -start-7 rounded-full bg-background p-2">
+            <SpinBadge
+              id="hero-ring"
+              href={href(lang, "#collaboration")}
+              label={t.hero.badge}
+              size={104}
+            >
+              <ArrowDown className="size-5" />
+            </SpinBadge>
+          </div>
         </div>
       </Container>
     </section>
@@ -251,54 +224,34 @@ export function Collaboration({ t }: { t: Dictionary }) {
 
 const ART = ["ads", "web", "search"] as const;
 
-function ServiceArt({ kind }: { kind: (typeof ART)[number] }) {
+function ServiceArt({ kind, alt }: { kind: (typeof ART)[number]; alt?: string }) {
   const common = "absolute inset-0";
   return (
     <div className="relative aspect-square overflow-hidden bg-surface">
       {kind === "ads" && (
-        <div className={`${common} grid place-items-center bg-gradient-to-br from-primary-soft to-secondary-soft p-10`}>
-          {/* Sponsored post in a feed */}
-          <div className="w-full rounded-xl border border-line bg-background p-3 shadow-sm">
-            <div className="flex items-center gap-2">
-              <span className="size-6 rounded-full bg-primary/40" />
-              <div className="flex-1">
-                <div className="h-1.5 w-16 rounded bg-line" />
-                <div className="mt-1 h-1 w-10 rounded bg-secondary" />
-              </div>
-            </div>
-            <div className="mt-3 h-20 rounded-lg bg-primary/25" />
-            <div className="mt-3 flex items-center justify-between">
-              <div className="h-1.5 w-20 rounded bg-line" />
-              <span className="size-4 w-12 rounded bg-ink" />
-            </div>
-          </div>
+        <div className={`${common} bg-gradient-to-br from-primary-soft to-secondary-soft`}>
+          {/* Transparent WebP: the gradient stays visible behind the cut-out. The artwork sits
+              left of centre in its canvas, so it is nudged right and enlarged a touch. */}
+          <Image
+            src="/ads.webp"
+            alt={alt ?? ""}
+            fill
+            sizes="(min-width: 1280px) 544px, (min-width: 1024px) 38vw, (min-width: 640px) 52vw, 78vw"
+            className="translate-x-[8%] scale-[1.15] object-contain"
+          />
         </div>
       )}
 
       {kind === "web" && (
-        <div className={`${common} grid place-items-center bg-gradient-to-b from-secondary-soft to-primary-soft p-10`}>
-          {/* Browser window with a hero section taking shape */}
-          <div className="w-full overflow-hidden rounded-lg border border-line bg-background shadow-sm">
-            <div className="flex items-center gap-1.5 border-b border-line px-3 py-2">
-              <span className="size-1.5 rounded-full bg-line" />
-              <span className="size-1.5 rounded-full bg-line" />
-              <span className="size-1.5 rounded-full bg-line" />
-              <div className="ms-2 h-1.5 flex-1 rounded bg-line" />
-            </div>
-            <div className="space-y-2 p-3">
-              <div className="h-1.5 w-1/2 rounded bg-ink/70" />
-              <div className="h-1 w-3/4 rounded bg-line" />
-              <div className="flex gap-2 pt-1">
-                <span className="h-4 w-12 rounded bg-primary/70" />
-                <span className="h-4 w-10 rounded border border-line" />
-              </div>
-              <div className="grid grid-cols-3 gap-1.5 pt-2">
-                <div className="h-8 rounded bg-surface" />
-                <div className="h-8 rounded bg-secondary/40" />
-                <div className="h-8 rounded bg-surface" />
-              </div>
-            </div>
-          </div>
+        <div className={`${common} bg-gradient-to-b from-secondary-soft to-primary-soft`}>
+          {/* Transparent WebP: the gradient above stays visible behind the mockup. */}
+          <Image
+            src="/web-development.webp"
+            alt={alt ?? ""}
+            fill
+            sizes="(min-width: 1280px) 544px, (min-width: 1024px) 38vw, (min-width: 640px) 52vw, 78vw"
+            className="object-contain"
+          />
         </div>
       )}
 
@@ -347,7 +300,7 @@ export function Services({ t }: { t: Dictionary }) {
           >
             <div className="overflow-hidden">
               <div className="transition duration-500 group-hover:scale-[1.03]">
-                <ServiceArt kind={ART[i]} />
+                <ServiceArt kind={ART[i]} alt={[t.services.adsAlt, t.services.webAlt, undefined][i]} />
               </div>
             </div>
             <div className="border-t border-line px-6 py-7">
@@ -364,14 +317,6 @@ export function Services({ t }: { t: Dictionary }) {
           </article>
         ))}
       </div>
-
-      <Container>
-        <p className="mt-5 flex items-center justify-end gap-1.5 text-[12px] text-muted">
-          {t.services.scrollHint}
-          {/* Rotated rather than a literal arrow, so it points the reading way in Arabic. */}
-          <ArrowRight className="size-3.5 rtl:rotate-180" />
-        </p>
-      </Container>
     </section>
   );
 }
