@@ -7,7 +7,8 @@ import { Chevron } from "./icons";
 export type NavItem = {
   key: string;
   label: string;
-  href: string;
+  /** Omitted for a dropdown that is only a trigger, like Service. */
+  href?: string;
   /** Path this item owns. Exact for the home page, a prefix for the rest. */
   match: string;
   exact?: boolean;
@@ -29,69 +30,72 @@ const OFF = "text-muted hover:text-ink";
 
 export function DesktopNav({
   items,
-  serviceLabel,
-  services,
-  servicesMatch,
 }: {
-  items: NavItem[];
-  serviceLabel: string;
-  services: NavService[];
-  servicesMatch: string;
+  /** A dropdown renders when an item has children; an item without an href is a button. */
+  items: (NavItem & { children?: NavService[] })[];
 }) {
   const pathname = usePathname();
-  const servicesActive = isActive(pathname, servicesMatch);
 
   return (
     <nav className="hidden items-center gap-8 md:flex">
-      {items.map((item, i) => (
-        <span key={item.key} className="contents">
+      {items.map((item) => {
+        const on = isActive(pathname, item.match, item.exact);
+        const label = item.href ? (
           <Link
             href={item.href}
-            aria-current={isActive(pathname, item.match, item.exact) ? "page" : undefined}
-            className={`${LINK} ${isActive(pathname, item.match, item.exact) ? ON : OFF}`}
+            aria-current={on ? "page" : undefined}
+            className={`${LINK} ${on ? ON : OFF}`}
           >
             {item.label}
           </Link>
+        ) : (
+          <button
+            aria-current={on ? "page" : undefined}
+            className={`flex items-center gap-1 ${LINK} ${
+              on ? ON : "text-muted group-hover:text-ink"
+            }`}
+          >
+            {item.label}
+            <Chevron className="size-3.5 transition group-hover:rotate-180" />
+          </button>
+        );
 
-          {/* The dropdown sits after the first item, where it did before. */}
-          {i === 0 && (
-            <div className="group relative">
-              <button
-                aria-current={servicesActive ? "page" : undefined}
-                className={`flex items-center gap-1 ${LINK} ${
-                  servicesActive ? ON : "text-muted group-hover:text-ink"
-                }`}
-              >
-                {serviceLabel}
-                <Chevron className="size-3.5 transition group-hover:rotate-180" />
-              </button>
+        if (!item.children) return <span key={item.key}>{label}</span>;
 
-              <div className="invisible absolute top-full left-1/2 w-56 -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <ul className="rounded-xl border border-line bg-background p-2 shadow-xl shadow-ink/5">
-                  {services.map((s) => {
-                    const on = s.match ? isActive(pathname, s.match, true) : false;
-                    return (
-                      <li key={s.label}>
-                        <Link
-                          href={s.href}
-                          aria-current={on ? "page" : undefined}
-                          className={`block rounded-lg px-3 py-2 text-start text-[13px] transition ${
-                            on
-                              ? "bg-primary-soft font-medium text-ink"
-                              : "text-muted hover:bg-primary-soft hover:text-ink"
-                          }`}
-                        >
-                          {s.label}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
+        return (
+          <div key={item.key} className="group relative">
+            <span className="flex items-center gap-1">
+              {label}
+              {item.href && (
+                <Chevron className="size-3.5 text-muted transition group-hover:rotate-180" />
+              )}
+            </span>
+
+            <div className="invisible absolute top-full left-1/2 w-60 -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+              <ul className="rounded-xl border border-line bg-background p-2 shadow-xl shadow-ink/5">
+                {item.children.map((c) => {
+                  const childOn = c.match ? isActive(pathname, c.match, true) : false;
+                  return (
+                    <li key={c.label}>
+                      <Link
+                        href={c.href}
+                        aria-current={childOn ? "page" : undefined}
+                        className={`block rounded-lg px-3 py-2 text-start text-[13px] transition ${
+                          childOn
+                            ? "bg-primary-soft font-medium text-ink"
+                            : "text-muted hover:bg-primary-soft hover:text-ink"
+                        }`}
+                      >
+                        {c.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
-          )}
-        </span>
-      ))}
+          </div>
+        );
+      })}
     </nav>
   );
 }

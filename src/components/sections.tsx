@@ -5,6 +5,7 @@ import { ContactForm } from "./contact-form";
 import { DesktopNav } from "./desktop-nav";
 import { MobileMenu } from "./mobile-menu";
 import type { Dictionary, Locale } from "@/lib/dictionaries";
+import { PROJECTS } from "@/lib/portfolio";
 import { SERVICE_SLUGS } from "@/lib/services";
 import {
   ArrowDown,
@@ -33,11 +34,6 @@ const href = (lang: Locale, path: string) => `/${lang}${path}`;
 /* ------------------------------------------------------------------ Navbar */
 
 export function Navbar({ lang, t }: P) {
-  const menu = [
-    { key: "home", label: t.nav.home, href: href(lang, "#top"), match: `/${lang}`, exact: true },
-    { key: "work", label: t.nav.work, href: href(lang, "/portfolio"), match: `/${lang}/portfolio` },
-    { key: "about", label: t.nav.about, href: href(lang, "/about"), match: `/${lang}/about` },
-  ];
   const services = t.services.items.map((s, i) => {
     const slug = SERVICE_SLUGS[i];
     const path = slug ? `/services/${slug}` : "#services";
@@ -47,6 +43,28 @@ export function Navbar({ lang, t }: P) {
       match: slug ? `/${lang}${path}` : undefined,
     };
   });
+
+  // Only the categories that actually have projects reach the Project dropdown.
+  const projectCategories = PROJECTS.map((p) => p.service)
+    .filter((s, i, all) => all.indexOf(s) === i)
+    .map((key) => ({
+      label: t.portfolio.services[key],
+      href: href(lang, `/portfolio?service=${key}`),
+    }));
+
+  const menu = [
+    { key: "home", label: t.nav.home, href: href(lang, "#top"), match: `/${lang}`, exact: true },
+    { key: "service", label: t.nav.service, match: `/${lang}/services`, children: services },
+    {
+      key: "work",
+      label: t.nav.work,
+      href: href(lang, "/portfolio"),
+      match: `/${lang}/portfolio`,
+      children: projectCategories,
+    },
+    { key: "about", label: t.nav.about, href: href(lang, "/about"), match: `/${lang}/about` },
+  ];
+
   const other: Locale = lang === "en" ? "ar" : "en";
 
   return (
@@ -64,12 +82,7 @@ export function Navbar({ lang, t }: P) {
           <span className="text-[15px] font-semibold tracking-tight">{t.brand}</span>
         </Link>
 
-        <DesktopNav
-          items={menu}
-          serviceLabel={t.nav.service}
-          services={services}
-          servicesMatch={`/${lang}/services`}
-        />
+        <DesktopNav items={menu} />
 
         <div className="flex items-center gap-1">
           {/* Same page, other language. hreflang lets crawlers pair the two. */}
@@ -88,8 +101,6 @@ export function Navbar({ lang, t }: P) {
           </span>
           <MobileMenu
             items={menu}
-            services={services}
-            servicesLabel={t.nav.servicesLabel}
             otherLocale={other}
             otherLocaleLabel={t.nav.switchTo}
             openLabel={t.nav.openMenu}

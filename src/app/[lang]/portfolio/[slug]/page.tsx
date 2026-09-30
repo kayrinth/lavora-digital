@@ -34,7 +34,8 @@ export default async function ProjectPage(
   if (!project) notFound();
 
   const t = getDictionary(lang);
-  const body = project.body ? pick(project.body, lang) : [];
+  const body = pick(project.body, lang);
+  const meta = pick(project.meta, lang);
 
   return (
     <div className="bg-background">
@@ -49,62 +50,47 @@ export default async function ProjectPage(
             {t.portfolio.back}
           </Link>
 
+          <div className="mt-6 flex flex-wrap items-center gap-5">
+            {project.logo && (
+              <span className="relative block h-16 w-36 shrink-0 rounded-xl border border-line bg-white">
+                <Image
+                  src={project.logo}
+                  alt=""
+                  fill
+                  sizes="144px"
+                  priority
+                  className="object-contain p-3"
+                />
+              </span>
+            )}
+            <p className="text-[13px] text-primary">{pick(project.subtitle, lang)}</p>
+          </div>
+
           <h1 className="mt-6 max-w-2xl text-[34px] leading-[1.1] font-light tracking-tight sm:text-[46px]">
             {project.title}
           </h1>
-          <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-muted">
-            {pick(project.summary, lang)}
-          </p>
-
-          {/* The gradient shows through transparent cut-outs, the same as the service cards. */}
-          <div className="relative mt-12 aspect-[16/10] overflow-hidden rounded-2xl bg-gradient-to-br from-primary-soft to-secondary-soft">
-            <Image
-              src={project.image}
-              alt={pick(project.imageAlt, lang)}
-              fill
-              priority
-              sizes="(min-width: 1200px) 1040px, 100vw"
-              className={project.imageFit === "contain" ? "object-contain" : "object-cover"}
-            />
-          </div>
 
           <div className="mt-12 grid gap-10 lg:grid-cols-[0.6fr_1.4fr] lg:gap-16">
             <dl className="space-y-6 text-[13px]">
+              {meta.map((row) => (
+                <div key={row.label}>
+                  <dt className="text-muted">{row.label}</dt>
+                  <dd className="mt-1 font-medium">{row.value}</dd>
+                </div>
+              ))}
               <div>
                 <dt className="text-muted">{t.portfolio.metaService}</dt>
-                <dd className="mt-1 font-medium">{t.portfolio.services[project.service]}</dd>
+                <dd className="mt-1 font-medium">
+                  {t.portfolio.services[project.service]}
+                </dd>
               </div>
-              {project.year && (
-                <div>
-                  <dt className="text-muted">{t.portfolio.metaYear}</dt>
-                  {/* bdi keeps the digits intact without forcing the block to align left in RTL. */}
-                  <dd className="mt-1 font-medium">
-                    <bdi>{project.year}</bdi>
-                  </dd>
-                </div>
-              )}
-              {project.url && (
-                <div>
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-[44px] items-center gap-1.5 font-medium text-primary underline underline-offset-4"
-                  >
-                    {t.portfolio.visit}
-                    <ArrowRight className="size-3.5 -rotate-45" />
-                  </a>
-                </div>
-              )}
             </dl>
 
-            {body.length > 0 && (
-              <div className="max-w-[62ch] space-y-5 text-[15px] leading-relaxed text-muted">
-                {body.map((para) => (
-                  <p key={para}>{para}</p>
-                ))}
-              </div>
-            )}
+            <div className="max-w-[62ch] space-y-5 text-[15px] leading-relaxed text-muted">
+              {body.map((para) => (
+                <p key={para}>{para}</p>
+              ))}
+            </div>
           </div>
         </Container>
 

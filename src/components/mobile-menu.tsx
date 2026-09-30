@@ -6,18 +6,16 @@ import { usePathname } from "next/navigation";
 import { Close, Menu } from "./icons";
 import { isActive, type NavItem, type NavService } from "./desktop-nav";
 
+type Item = NavItem & { children?: NavService[] };
+
 export function MobileMenu({
   items,
-  services,
-  servicesLabel,
   otherLocale,
   otherLocaleLabel,
   openLabel,
   closeLabel,
 }: {
-  items: NavItem[];
-  services: NavService[];
-  servicesLabel: string;
+  items: Item[];
   otherLocale: string;
   otherLocaleLabel: string;
   openLabel: string;
@@ -42,52 +40,59 @@ export function MobileMenu({
       {open && (
         <nav
           id="mobile-menu"
-          className="absolute inset-x-0 top-full border-b border-line bg-background md:hidden"
+          className="absolute inset-x-0 top-full max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-line bg-background md:hidden"
         >
           <ul className="mx-auto w-full max-w-[1200px] px-6 py-2">
             {items.map((item) => {
               const on = isActive(pathname, item.match, item.exact);
               return (
                 <li key={item.key} className="border-b border-line">
-                  <Link
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    aria-current={on ? "page" : undefined}
-                    className={`flex min-h-[48px] items-center text-[14px] ${
-                      on ? "font-semibold text-ink" : ""
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
+                  {/* A dropdown trigger has no page of its own, so it becomes a heading here. */}
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      onClick={() => setOpen(false)}
+                      aria-current={on ? "page" : undefined}
+                      className={`flex min-h-[48px] items-center text-[14px] ${
+                        on ? "font-semibold text-ink" : ""
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <p
+                      className={`flex min-h-[44px] items-center text-[11px] tracking-[0.12em] uppercase ${
+                        on ? "text-ink" : "text-muted"
+                      }`}
+                    >
+                      {item.label}
+                    </p>
+                  )}
+
+                  {item.children && (
+                    <ul className="pb-2">
+                      {item.children.map((c) => {
+                        const childOn = c.match ? isActive(pathname, c.match, true) : false;
+                        return (
+                          <li key={c.label}>
+                            <Link
+                              href={c.href}
+                              onClick={() => setOpen(false)}
+                              aria-current={childOn ? "page" : undefined}
+                              className={`flex min-h-[44px] items-center ps-4 text-[13.5px] ${
+                                childOn ? "font-semibold text-ink" : "text-muted"
+                              }`}
+                            >
+                              {c.label}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
                 </li>
               );
             })}
-
-            {/* The desktop dropdown has nowhere to hang on a phone, so its items sit inline. */}
-            <li className="border-b border-line pt-3 pb-2">
-              <p className="text-[11px] tracking-[0.12em] text-muted uppercase">
-                {servicesLabel}
-              </p>
-              <ul className="mt-1">
-                {services.map((s) => {
-                  const on = s.match ? isActive(pathname, s.match, true) : false;
-                  return (
-                    <li key={s.label}>
-                      <Link
-                        href={s.href}
-                        onClick={() => setOpen(false)}
-                        aria-current={on ? "page" : undefined}
-                        className={`flex min-h-[44px] items-center text-[13.5px] ${
-                          on ? "font-semibold text-ink" : "text-muted"
-                        }`}
-                      >
-                        {s.label}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </li>
 
             <li>
               <Link
