@@ -17,8 +17,10 @@ export type Project = {
    * marks are drawn for light backgrounds. Omitted where no logo file exists.
    */
   logo?: string;
-  /** Work images. The first is the card thumbnail; all of them show on the detail page. */
+  /** Work images, shown on the detail page. The first doubles as the card thumbnail. */
   gallery?: string[];
+  /** Card thumbnail, where a purpose-made crop beats the first gallery image. */
+  thumb?: string;
   /** CSS aspect-ratio for the gallery tiles, where the files are not the usual 4:5. */
   ratio?: string;
   summary: Localized<string>;
@@ -558,6 +560,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "borch-and-co",
+    thumb: "/thumbnail-website/broch.webp",
     gallery: [
       "/website/borch.png",
     ],
@@ -593,6 +596,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "chineserd-platform",
+    thumb: "/thumbnail-website/chineserd.webp",
     gallery: [
       "/website/chinesred.png",
     ],
@@ -631,6 +635,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "sando",
+    thumb: "/thumbnail-website/sando.webp",
     gallery: [
       "/website/sando.png",
     ],
@@ -669,6 +674,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "indo-karya-tangguh",
+    thumb: "/thumbnail-website/ikat.webp",
     gallery: [
       "/website/ikat.png",
     ],
@@ -704,6 +710,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "harmony-dental-clinic",
+    thumb: "/thumbnail-website/dental.webp",
     gallery: [
       "/website/harmony-dental.png",
     ],
@@ -742,6 +749,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "nata-solusi-pratama",
+    thumb: "/thumbnail-website/natasolusi.webp",
     gallery: [
       "/website/nata-solusi.png",
     ],

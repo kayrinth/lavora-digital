@@ -59,7 +59,7 @@ export default async function Portfolio(props: PageProps<"/[lang]/portfolio">) {
     title: p.title,
     subtitle: pick(p.subtitle, lang),
     logo: p.logo,
-    image: p.gallery?.[0],
+    image: p.thumb ?? p.gallery?.[0],
     summary: pick(p.summary, lang),
   }));
 
