@@ -23,9 +23,10 @@ const en = {
 
   nav: {
     home: "Home",
-    work: "Work",
+    work: "Project",
     service: "Service",
     about: "About",
+    contact: "Contact us",
     cta: "Get a Proposal",
     openMenu: "Open menu",
     closeMenu: "Close menu",
@@ -41,7 +42,7 @@ const en = {
       { lead: "Shape your", strong: "future" },
     ],
     lead:
-      "Lavora Digital is a full-service digital agency specializing in advertising, digital marketing, and web development, helping brands connect with their audience, grow their business, and build meaningful digital experiences.",
+      "La Vora Digital is a full-service digital agency specializing in advertising, digital marketing, and web development, helping brands connect with their audience, grow their business, and build meaningful digital experiences.",
     imageAlt: "A camera operator on a lit studio set, signalling to the crew",
     badge: "see how we work",
     stats: [
@@ -51,90 +52,130 @@ const en = {
   },
 
   collaboration: {
-    titleLead: "Media buying built on",
-    titleStrong: "evidence",
+    titleLead: "We connect brands with the",
+    titleStrong: "right audience.",
     body:
-      "We start with your data, not a template. Audience research, creative testing and clean measurement run on a fixed cadence, so budget always moves toward what is working.",
+      "We combine smart targeting, strategic media buying and continuous optimisation to help brands reach the right audience, maximise every budget and turn advertising into measurable business results.",
     features: [
-      "Audiences built from first-party data, never guesswork",
-      "Every impression tracked through to revenue",
-      "One message, tuned per channel and placement",
-      "Weekly optimisation cycles that compound results",
+      {
+        title: "Precise Audience Targeting",
+        desc: "Reach the right people with data-driven audience targeting and campaign strategies.",
+      },
+      {
+        title: "Performance-Focused Campaigns",
+        desc: "Every campaign is managed with clear KPIs, measurable results and business objectives in mind.",
+      },
+      {
+        title: "Smart Budget Optimisation",
+        desc: "We continuously analyse campaign performance and shift budgets toward what delivers the best results.",
+      },
+      {
+        title: "Transparent Reporting",
+        desc: "Clear performance reports give you a complete view of your campaigns, spending and results.",
+      },
     ],
   },
 
   services: {
-    titleLead: "Every channel your",
-    titleStrong: "buyers",
-    titleTail: "are on",
+    titleLead: "Our",
+    titleStrong: "Services",
+    titleTail: "",
+    seeMore: "See our projects",
+    learnMore: "Learn more",
     adsAlt: "A man leaping with a bass guitar above a phone, hands reaching out of its screen among floating hearts and emoji",
     webAlt: "Website designs shown on a laptop and two floating browser screens",
+    marketingAlt:
+      "A laptop showing a campaign dashboard, ringed by social network icons and analytics cards",
     items: [
       {
         title: "Advertising Agency",
         desc:
-          "Campaign strategy, ad creative and media buying across Meta, Google and TikTok",
+          "Campaign strategy and media buying across Meta and Google, built around your audience and business goals.",
       },
       {
         title: "Web Development",
         desc:
-          "Landing pages and company sites built to load fast and turn visits into enquiries",
+          "Websites and landing pages designed to support your brand and turn digital traffic into opportunities.",
       },
       {
         title: "Digital Marketing",
-        desc: "Search, content and email that keep bringing traffic after the ad budget stops",
+        desc:
+          "Digital strategies that connect your brand with the right audience across relevant online channels.",
       },
     ],
   },
 
   banner: {
-    titleLead: "Always-on media,",
+    titleLead: "Always-on advertising,",
     titleStrong: "always improving",
-    body: "Optimised daily, reported weekly, reviewed with you every month.",
+    body:
+      "We monitor campaign performance, optimise every opportunity and continuously refine your media strategy.",
     badge: "see our results",
+    imageAlt:
+      "A Meta Ads Manager dashboard on a monitor, with campaign status and audience breakdown panels beside it",
   },
 
   process: {
     titleLead: "How we turn",
-    titleStrong: "budget",
-    titleTail: "into growth",
+    titleStrong: "strategy",
+    titleTail: "into results",
     body:
-      "A clear four-step structure, so you always know what your spend is doing and what happens next.",
+      "A clear four-step process designed to make your advertising more targeted, measurable and continuously optimised.",
     cta: "Get a Proposal",
     steps: [
       {
-        title: "Audit",
-        desc: "We map your funnel, tracking and past spend before touching a budget",
+        title: "Discover",
+        desc: "We learn your business, audience, objectives and existing campaign performance before building the right approach.",
       },
       {
         title: "Strategy",
-        desc: "Channel mix, audiences and budget split agreed with you up front",
+        desc: "We define the audience, campaign structure, channels, budget allocation and KPIs around your business goals.",
       },
       {
         title: "Launch",
-        desc: "Creative, tracking and campaigns go live with clean measurement",
+        desc: "We set up campaigns, creatives, tracking and targeting, then launch across the right advertising platforms.",
       },
       {
-        title: "Scale",
-        desc: "Weekly optimisation until the cost per result stops falling",
+        title: "Optimise",
+        desc: "We monitor performance, test new approaches and continuously optimise budget, audience and creative.",
       },
     ],
   },
 
-  marquee: {
-    label: "Reach the right audience",
-    word1: "Reach",
-    word2: "the right",
-    word3: "audience",
-    note:
-      "Great targeting only pays off when the creative earns the click and the landing page earns the sale",
+  clients: {
+    titleLead: "Our",
+    titleStrong: "clients",
   },
 
   cta: {
-    titleLead: "Let's plan your",
-    titleStrong: "next",
-    titleTail: "campaign",
-    body: "Send us your current numbers and we'll come back with where the waste is.",
+    titleLead: "Let's start your",
+    titleStrong: "project",
+    titleTail: "with us",
+    body:
+      "Tell us about your goals, and let's build the right strategy for your brand.",
+  },
+
+  portfolio: {
+    titleLead: "Selected",
+    titleStrong: "projects",
+    intro:
+      "Projects across advertising, web development and digital marketing.",
+    filterLabel: "Filter by service",
+    filterAll: "All",
+    services: {
+      ads: "Advertising",
+      web: "Web Development",
+      marketing: "Digital Marketing",
+    },
+    empty: "Our case studies are being prepared. Check back soon.",
+    placeholder: "Placeholder",
+    view: "View project",
+    back: "All projects",
+    visit: "Visit the live site",
+    metaService: "Service",
+    metaYear: "Year",
+    ctaTitle: "Have a project in mind?",
+    cta: "Start a project",
   },
 
   form: {
@@ -152,26 +193,10 @@ const en = {
     errorSend: "We could not send that. Email us directly instead.",
   },
 
-  newsletter: {
-    label: "Email address",
-    placeholder: "Email Address..",
-    subscribe: "Subscribe",
-    subscribed: "Subscribed",
-  },
-
   footer: {
-    columns: [
-      {
-        title: "Services",
-        items: ["Advertising Agency", "Web Development", "Digital Marketing"],
-      },
-      { title: "Company", items: ["About", "Case Studies", "Careers", "Contact"] },
-      { title: "Connect", items: ["Instagram", "LinkedIn", "YouTube"] },
-    ],
-    stayUpdated: "Stay updated",
-    newsletterNote:
-      "Occasional emails from La Vora Digital on ad platform changes and what is working in our accounts. Unsubscribe from any one of them.",
-    rights: "©2026 La Vora Digital All rights reserved.",
+    servicesTitle: "Services",
+    companyTitle: "Company",
+    rights: "©2026 La Vora Digital. All rights reserved.",
     blurb:
       "La Vora Digital is a digital advertising agency that plans, buys and optimises media for brands that care what every impression returns.",
     terms: "Terms",
@@ -196,9 +221,10 @@ const ar: Dictionary = {
 
   nav: {
     home: "الرئيسية",
-    work: "أعمالنا",
+    work: "مشاريعنا",
     service: "الخدمات",
     about: "من نحن",
+    contact: "تواصل معنا",
     cta: "اطلب عرض سعر",
     openMenu: "فتح القائمة",
     closeMenu: "إغلاق القائمة",
@@ -224,87 +250,125 @@ const ar: Dictionary = {
   },
 
   collaboration: {
-    titleLead: "شراء وسائط مبني على",
-    titleStrong: "الأدلة",
+    titleLead: "نصل العلامات",
+    titleStrong: "بالجمهور الصحيح.",
     body:
-      "نبدأ من بياناتك أنت، لا من قالب جاهز. بحث الجمهور واختبار المحتوى الإبداعي والقياس الدقيق تجري على وتيرة ثابتة، لتتحرك الميزانية دائمًا نحو ما ينجح.",
+      "نجمع بين الاستهداف الذكي وشراء الوسائط الاستراتيجي والتحسين المستمر، لنساعد العلامات على الوصول إلى الجمهور الصحيح، والاستفادة القصوى من كل ميزانية، وتحويل الإعلان إلى نتائج عمل قابلة للقياس.",
     features: [
-      "جماهير مبنية على بياناتك الخاصة، لا على التخمين",
-      "كل ظهور إعلاني متتبَّع حتى الإيراد",
-      "رسالة واحدة، مضبوطة لكل قناة وموضع",
-      "دورات تحسين أسبوعية تتراكم نتائجها",
+      {
+        title: "استهداف دقيق للجمهور",
+        desc: "اوصل إلى الأشخاص المناسبين باستهداف واستراتيجيات حملات مبنية على البيانات.",
+      },
+      {
+        title: "حملات تركّز على الأداء",
+        desc: "كل حملة تُدار بمؤشرات أداء واضحة ونتائج قابلة للقياس وأهداف عمل محددة.",
+      },
+      {
+        title: "تحسين ذكي للميزانية",
+        desc: "نحلل أداء الحملات باستمرار وننقل الميزانية نحو ما يحقق أفضل النتائج.",
+      },
+      {
+        title: "تقارير شفافة",
+        desc: "تقارير أداء واضحة تمنحك صورة كاملة عن حملاتك وإنفاقك ونتائجك.",
+      },
     ],
   },
 
   services: {
-    titleLead: "كل قناة يتواجد فيها",
-    titleStrong: "عملاؤك",
+    titleLead: "",
+    titleStrong: "خدماتنا",
     titleTail: "",
+    seeMore: "شاهد مشاريعنا",
+    learnMore: "اعرف المزيد",
     adsAlt: "رجل يقفز حاملًا غيتارًا فوق هاتف تمتد من شاشته أيدٍ كثيرة وتحيط به قلوب وإيموجي عائمة",
     webAlt: "تصاميم مواقع معروضة على حاسوب محمول وشاشتَي متصفح عائمتين",
+    marketingAlt:
+      "حاسوب محمول يعرض لوحة أداء الحملات، تحيط به أيقونات الشبكات الاجتماعية وبطاقات التحليلات",
     items: [
       {
         title: "وكالة إعلانات",
-        desc: "استراتيجية الحملات والمحتوى الإعلاني وشراء الوسائط عبر ميتا وجوجل وتيك توك",
+        desc: "استراتيجية الحملات وشراء الوسائط عبر ميتا وجوجل، مبنية على جمهورك وأهداف عملك.",
       },
       {
         title: "تطوير المواقع",
-        desc: "صفحات هبوط ومواقع شركات سريعة التحميل تحوّل الزيارات إلى استفسارات",
+        desc: "مواقع وصفحات هبوط مصممة لدعم علامتك وتحويل الزيارات الرقمية إلى فرص.",
       },
       {
         title: "تسويق رقمي",
-        desc: "بحث ومحتوى وبريد إلكتروني تواصل جلب الزيارات بعد توقف ميزانية الإعلانات",
+        desc: "استراتيجيات رقمية تربط علامتك بالجمهور الصحيح عبر القنوات المناسبة.",
       },
     ],
   },
 
   banner: {
-    titleLead: "وسائط لا تتوقف،",
+    titleLead: "إعلانات لا تتوقف،",
     titleStrong: "وتتحسن باستمرار",
-    body: "تحسين يومي، تقرير أسبوعي، ومراجعة معك كل شهر.",
+    body:
+      "نراقب أداء الحملات، ونحسّن كل فرصة، ونطوّر استراتيجية وسائطك باستمرار.",
     badge: "شاهد نتائجنا",
+    imageAlt:
+      "لوحة مدير إعلانات ميتا على شاشة، بجانبها لوحتا حالة الحملات وتوزيع الجمهور",
   },
 
   process: {
     titleLead: "كيف نحوّل",
-    titleStrong: "الميزانية",
-    titleTail: "إلى نمو",
-    body: "أربع خطوات واضحة، لتعرف دائمًا ما الذي تفعله ميزانيتك وما الخطوة التالية.",
+    titleStrong: "الاستراتيجية",
+    titleTail: "إلى نتائج",
+    body:
+      "عملية من أربع خطوات واضحة، مصممة لجعل إعلاناتك أكثر استهدافًا وقابلية للقياس وتحسينًا مستمرًا.",
     cta: "اطلب عرض سعر",
     steps: [
       {
-        title: "التدقيق",
-        desc: "نرسم مسار الشراء والتتبع والإنفاق السابق قبل أن نلمس أي ميزانية",
+        title: "الاكتشاف",
+        desc: "نتعرّف على عملك وجمهورك وأهدافك وأداء حملاتك الحالية قبل بناء المنهج المناسب.",
       },
       {
         title: "الاستراتيجية",
-        desc: "مزيج القنوات والجماهير وتقسيم الميزانية متفق عليه معك مسبقًا",
+        desc: "نحدد الجمهور وهيكل الحملات والقنوات وتوزيع الميزانية ومؤشرات الأداء وفق أهداف عملك.",
       },
       {
         title: "الإطلاق",
-        desc: "المحتوى الإبداعي والتتبع والحملات تنطلق مع قياس نظيف",
+        desc: "نجهّز الحملات والمحتوى الإبداعي والتتبع والاستهداف، ثم ننطلق عبر المنصات الإعلانية المناسبة.",
       },
       {
-        title: "التوسع",
-        desc: "تحسين أسبوعي حتى تتوقف تكلفة النتيجة عن الانخفاض",
+        title: "التحسين",
+        desc: "نراقب الأداء ونختبر مناهج جديدة ونحسّن الميزانية والجمهور والمحتوى الإبداعي باستمرار.",
       },
     ],
   },
 
-  marquee: {
-    label: "أوصل رسالتك إلى الجمهور الصحيح",
-    word1: "أوصل",
-    word2: "إلى الجمهور",
-    word3: "الصحيح",
-    note:
-      "الاستهداف الجيد لا يؤتي ثماره إلا حين يستحق المحتوى الإبداعي النقرة وتستحق صفحة الهبوط البيع",
+  clients: {
+    titleLead: "",
+    titleStrong: "عملاؤنا",
   },
 
   cta: {
-    titleLead: "لنخطط",
-    titleStrong: "لحملتك",
-    titleTail: "القادمة",
-    body: "أرسل لنا أرقامك الحالية وسنعود إليك بموضع الهدر فيها.",
+    titleLead: "لنبدأ",
+    titleStrong: "مشروعك",
+    titleTail: "معنا",
+    body: "حدّثنا عن أهدافك، ولنبنِ معًا الاستراتيجية المناسبة لعلامتك.",
+  },
+
+  portfolio: {
+    titleLead: "مشاريع",
+    titleStrong: "مختارة",
+    intro: "مشاريع في الإعلانات وتطوير المواقع والتسويق الرقمي.",
+    filterLabel: "تصفية حسب الخدمة",
+    filterAll: "الكل",
+    services: {
+      ads: "الإعلانات",
+      web: "تطوير المواقع",
+      marketing: "التسويق الرقمي",
+    },
+    empty: "نجهّز دراسات الحالة حاليًا. عد إلينا قريبًا.",
+    placeholder: "نموذج توضيحي",
+    view: "عرض المشروع",
+    back: "كل المشاريع",
+    visit: "زيارة الموقع",
+    metaService: "الخدمة",
+    metaYear: "السنة",
+    ctaTitle: "لديك مشروع في بالك؟",
+    cta: "ابدأ مشروعًا",
   },
 
   form: {
@@ -322,25 +386,9 @@ const ar: Dictionary = {
     errorSend: "تعذّر الإرسال. راسلنا على البريد الإلكتروني مباشرة.",
   },
 
-  newsletter: {
-    label: "البريد الإلكتروني",
-    placeholder: "البريد الإلكتروني..",
-    subscribe: "اشترك",
-    subscribed: "تم الاشتراك",
-  },
-
   footer: {
-    columns: [
-      {
-        title: "الخدمات",
-        items: ["وكالة إعلانات", "تطوير المواقع", "تسويق رقمي"],
-      },
-      { title: "الشركة", items: ["من نحن", "دراسات حالة", "وظائف", "تواصل معنا"] },
-      { title: "تابعنا", items: ["إنستغرام", "لينكدإن", "يوتيوب"] },
-    ],
-    stayUpdated: "ابقَ على اطلاع",
-    newsletterNote:
-      "رسائل متفرقة من لا فورا ديجيتال عن تغييرات منصات الإعلانات وما ينجح في الحسابات التي ندير. يمكنك إلغاء الاشتراك من أي رسالة.",
+    servicesTitle: "الخدمات",
+    companyTitle: "الشركة",
     rights: "©2026 لا فورا ديجيتال. جميع الحقوق محفوظة.",
     blurb:
       "لا فورا ديجيتال وكالة إعلانات رقمية تخطط وتشتري وتحسّن الوسائط للعلامات التي يهمها عائد كل ظهور إعلاني.",

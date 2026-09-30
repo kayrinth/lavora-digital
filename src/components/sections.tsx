@@ -2,21 +2,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container, Glow, PrimaryButton, SpinBadge } from "./ui";
 import { ContactForm } from "./contact-form";
+import { DesktopNav } from "./desktop-nav";
 import { MobileMenu } from "./mobile-menu";
-import { Newsletter } from "./newsletter";
 import type { Dictionary, Locale } from "@/lib/dictionaries";
+import { SERVICE_SLUGS } from "@/lib/services";
 import {
   ArrowDown,
-  Chevron,
-  Cursor,
-  Gauge,
-  Megaphone,
+  ArrowRight,
+  Instagram,
+  Linkedin,
   Play,
-  Target,
-  TrendUp,
+  Youtube,
 } from "./icons";
 
 type P = { lang: Locale; t: Dictionary };
+
+/**
+ * The footer's social row. These still point at the contact section: swap each
+ * href for the real profile URL once the accounts exist.
+ */
+const SOCIALS = [
+  { Icon: Instagram, label: "Instagram" },
+  { Icon: Linkedin, label: "LinkedIn" },
+  { Icon: Youtube, label: "YouTube" },
+];
 
 /** Every in-app link carries the locale, so /ar never falls back to /en. */
 const href = (lang: Locale, path: string) => `/${lang}${path}`;
@@ -25,11 +34,19 @@ const href = (lang: Locale, path: string) => `/${lang}${path}`;
 
 export function Navbar({ lang, t }: P) {
   const menu = [
-    { key: "home", label: t.nav.home, href: href(lang, "#top") },
-    { key: "work", label: t.nav.work, href: href(lang, "#services") },
-    { key: "about", label: t.nav.about, href: href(lang, "#process") },
+    { key: "home", label: t.nav.home, href: href(lang, "#top"), match: `/${lang}`, exact: true },
+    { key: "work", label: t.nav.work, href: href(lang, "/portfolio"), match: `/${lang}/portfolio` },
+    { key: "about", label: t.nav.about, href: href(lang, "/about"), match: `/${lang}/about` },
   ];
-  const services = t.services.items.map((s) => s.title);
+  const services = t.services.items.map((s, i) => {
+    const slug = SERVICE_SLUGS[i];
+    const path = slug ? `/services/${slug}` : "#services";
+    return {
+      label: s.title,
+      href: href(lang, path),
+      match: slug ? `/${lang}${path}` : undefined,
+    };
+  });
   const other: Locale = lang === "en" ? "ar" : "en";
 
   return (
@@ -47,45 +64,12 @@ export function Navbar({ lang, t }: P) {
           <span className="text-[15px] font-semibold tracking-tight">{t.brand}</span>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
-          <Link href={menu[0].href} className="text-[13px] font-semibold text-ink">
-            {menu[0].label}
-          </Link>
-          <Link
-            href={menu[1].href}
-            className="text-[13px] text-muted transition hover:text-ink"
-          >
-            {menu[1].label}
-          </Link>
-
-          <div className="group relative">
-            <button className="flex items-center gap-1 text-[13px] text-muted transition group-hover:text-ink">
-              {t.nav.service}
-              <Chevron className="size-3.5 transition group-hover:rotate-180" />
-            </button>
-            <div className="invisible absolute top-full left-1/2 w-56 -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-              <ul className="rounded-xl border border-line bg-background p-2 shadow-xl shadow-ink/5">
-                {services.map((s) => (
-                  <li key={s}>
-                    <Link
-                      href={href(lang, "#services")}
-                      className="block rounded-lg px-3 py-2 text-start text-[13px] text-muted transition hover:bg-primary-soft hover:text-ink"
-                    >
-                      {s}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <Link
-            href={menu[2].href}
-            className="text-[13px] text-muted transition hover:text-ink"
-          >
-            {menu[2].label}
-          </Link>
-        </nav>
+        <DesktopNav
+          items={menu}
+          serviceLabel={t.nav.service}
+          services={services}
+          servicesMatch={`/${lang}/services`}
+        />
 
         <div className="flex items-center gap-1">
           {/* Same page, other language. hreflang lets crawlers pair the two. */}
@@ -97,13 +81,14 @@ export function Navbar({ lang, t }: P) {
           >
             {t.nav.switchTo}
           </Link>
-          <PrimaryButton href={href(lang, "#contact")} className="px-3.5 py-2 text-[12px]">
-            {t.nav.cta}
-          </PrimaryButton>
+          <span className="hidden md:inline-flex">
+            <PrimaryButton href={href(lang, "#contact")} className="px-3.5 py-2 text-[12px]">
+              {t.nav.cta}
+            </PrimaryButton>
+          </span>
           <MobileMenu
             items={menu}
             services={services}
-            servicesHref={href(lang, "#services")}
             servicesLabel={t.nav.servicesLabel}
             otherLocale={other}
             otherLocaleLabel={t.nav.switchTo}
@@ -126,18 +111,28 @@ export function Hero({ lang, t }: P) {
       <Container className="relative grid items-center gap-12 pt-20 pb-24 lg:grid-cols-2 lg:gap-12 lg:pt-24">
         <div>
           <h1 className="max-w-2xl text-[36px] leading-[1.1] font-light tracking-tight sm:text-[52px] lg:text-[42px] xl:text-[52px]">
-            {t.hero.headline.map((line) => (
-              <span key={line.strong} className="block">
+            {t.hero.headline.map((line, i) => (
+              <span
+                key={line.strong}
+                className="rise block"
+                style={{ "--d": `${i * 90}ms` } as React.CSSProperties}
+              >
                 {line.lead} <span className="font-semibold">{line.strong}</span>
               </span>
             ))}
           </h1>
 
-          <p className="mt-7 max-w-xl text-[14px] leading-relaxed text-muted">
+          <p
+            className="rise mt-7 max-w-xl text-[14px] leading-relaxed text-muted"
+            style={{ "--d": "270ms" } as React.CSSProperties}
+          >
             {t.hero.lead}
           </p>
 
-          <div className="mt-8 grid max-w-md grid-cols-2 divide-x divide-line rounded-xl border border-line bg-surface/80 backdrop-blur">
+          <div
+            className="rise mt-8 grid max-w-md grid-cols-2 divide-x divide-line rounded-xl border border-line bg-surface/80 backdrop-blur"
+            style={{ "--d": "360ms" } as React.CSSProperties}
+          >
             {t.hero.stats.map((s) => (
               <div key={s.l} className="px-6 py-6">
                 <p dir="ltr" className="text-[28px] leading-none font-normal">
@@ -149,7 +144,7 @@ export function Hero({ lang, t }: P) {
           </div>
         </div>
 
-        <div className="relative">
+        <div className="rise relative" style={{ "--d": "180ms" } as React.CSSProperties}>
           {/* The source is a wide panorama, so the frame crops it rather than letterboxing. */}
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
             <Image
@@ -181,39 +176,33 @@ export function Hero({ lang, t }: P) {
 
 /* ----------------------------------------------------------- How we operate */
 
-const FEATURE_ICONS = [Target, TrendUp, Megaphone, Gauge];
-
 export function Collaboration({ t }: { t: Dictionary }) {
   return (
     <section id="collaboration" className="scroll-mt-16 pt-16 pb-24 lg:pt-20 lg:pb-32">
       <Container>
         <div className="grid gap-8 lg:grid-cols-2 lg:items-end">
-          <h2 className="max-w-md text-[32px] leading-[1.15] font-light tracking-tight sm:text-[38px]">
+          <h2 className="reveal max-w-md text-[32px] leading-[1.15] font-light tracking-tight sm:text-[38px]">
             {t.collaboration.titleLead}{" "}
             <span className="font-semibold">{t.collaboration.titleStrong}</span>
           </h2>
-          <p className="max-w-md text-[14px] leading-relaxed text-muted lg:justify-self-end lg:text-end">
+          <p className="reveal max-w-md text-[14px] leading-relaxed text-muted lg:justify-self-end lg:text-end">
             {t.collaboration.body}
           </p>
         </div>
 
-        <ul className="mt-14 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-          {t.collaboration.features.map((text, i) => {
-            const Icon = FEATURE_ICONS[i];
-            return (
-              <li
-                key={text}
-                className="group flex items-center gap-4 bg-surface px-6 py-5 text-start transition hover:bg-primary-soft/60 sm:flex-col sm:gap-5 sm:px-7 sm:py-10 sm:text-center"
-              >
-                <span className="grid size-11 shrink-0 place-items-center rounded-[10px] bg-background text-primary shadow-sm shadow-ink/5 transition group-hover:-translate-y-0.5">
-                  <Icon className="size-5" />
-                </span>
-                <p className="text-[13px] leading-relaxed text-muted sm:max-w-[18ch] sm:text-[12.5px]">
-                  {text}
-                </p>
-              </li>
-            );
-          })}
+        <ul className="reveal-stagger mt-14 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+          {t.collaboration.features.map((f, i) => (
+            <li
+              key={f.title}
+              className="reveal group bg-surface px-7 py-8 transition hover:bg-primary-soft/60"
+            >
+              <span dir="ltr" className="block text-[12px] text-primary tabular-nums">
+                0{i + 1}
+              </span>
+              <h3 className="mt-4 text-[15px] font-semibold">{f.title}</h3>
+              <p className="mt-2 text-[13px] leading-relaxed text-muted">{f.desc}</p>
+            </li>
+          ))}
         </ul>
       </Container>
     </section>
@@ -222,70 +211,36 @@ export function Collaboration({ t }: { t: Dictionary }) {
 
 /* ---------------------------------------------------------------- Services */
 
-const ART = ["ads", "web", "search"] as const;
+/**
+ * One transparent illustration per service, in the order of t.services.items.
+ * The gradient behind each one stays visible through the cut-out.
+ */
+const SERVICE_ART = [
+  { src: "/services/ads.webp", bg: "from-primary-soft to-secondary-soft" },
+  { src: "/services/web.webp", bg: "from-secondary-soft to-primary-soft" },
+  { src: "/services/digital-marketing.webp", bg: "from-primary-soft via-background to-secondary-soft" },
+];
 
-function ServiceArt({ kind, alt }: { kind: (typeof ART)[number]; alt?: string }) {
-  const common = "absolute inset-0";
+function ServiceArt({ index, alt }: { index: number; alt: string }) {
+  const art = SERVICE_ART[index];
   return (
-    <div className="relative aspect-square overflow-hidden bg-surface">
-      {kind === "ads" && (
-        <div className={`${common} bg-gradient-to-br from-primary-soft to-secondary-soft`}>
-          {/* Transparent WebP: the gradient stays visible behind the cut-out. The artwork sits
-              left of centre in its canvas, so it is nudged right and enlarged a touch. */}
-          <Image
-            src="/ads.webp"
-            alt={alt ?? ""}
-            fill
-            sizes="(min-width: 1280px) 544px, (min-width: 1024px) 38vw, (min-width: 640px) 52vw, 78vw"
-            className="translate-x-[8%] scale-[1.15] object-contain"
-          />
-        </div>
-      )}
-
-      {kind === "web" && (
-        <div className={`${common} bg-gradient-to-b from-secondary-soft to-primary-soft`}>
-          {/* Transparent WebP: the gradient above stays visible behind the mockup. */}
-          <Image
-            src="/web-development.webp"
-            alt={alt ?? ""}
-            fill
-            sizes="(min-width: 1280px) 544px, (min-width: 1024px) 38vw, (min-width: 640px) 52vw, 78vw"
-            className="object-contain"
-          />
-        </div>
-      )}
-
-      {kind === "search" && (
-        <div className={`${common} grid place-items-center bg-gradient-to-tr from-secondary-soft via-background to-primary-soft p-10`}>
-          {/* Search result with an ad slot on top */}
-          <div className="w-full space-y-3">
-            <div className="flex h-8 items-center gap-2 rounded-full border border-line bg-background px-3">
-              <span className="size-2.5 rounded-full border border-muted" />
-              <div className="h-1.5 w-2/3 rounded bg-line" />
-            </div>
-            <div className="rounded-lg border border-primary/40 bg-background p-3">
-              <span className="block h-1.5 w-4 rounded bg-primary" />
-              <div className="mt-2 h-1.5 w-3/4 rounded bg-ink/70" />
-              <div className="mt-1.5 h-1 w-full rounded bg-line" />
-              <div className="mt-1 h-1 w-1/2 rounded bg-line" />
-            </div>
-            <div className="space-y-1.5 px-1 opacity-60">
-              <div className="h-1.5 w-2/3 rounded bg-line" />
-              <div className="h-1 w-full rounded bg-line" />
-              <div className="h-1.5 w-1/2 rounded bg-line" />
-            </div>
-          </div>
-        </div>
-      )}
+    <div className={`relative aspect-square overflow-hidden bg-gradient-to-br ${art.bg}`}>
+      <Image
+        src={art.src}
+        alt={alt}
+        fill
+        sizes="(min-width: 1280px) 544px, (min-width: 1024px) 38vw, (min-width: 640px) 52vw, 78vw"
+        className="object-contain p-6"
+      />
     </div>
   );
 }
 
-export function Services({ t }: { t: Dictionary }) {
+export function Services({ lang, t }: P) {
   return (
     <section id="services" className="scroll-mt-16 pb-24 lg:pb-32">
       <Container>
-        <h2 className="text-center text-[32px] leading-tight font-light tracking-tight sm:text-[38px]">
+        <h2 className="reveal text-center text-[32px] leading-tight font-light tracking-tight sm:text-[38px]">
           {t.services.titleLead}{" "}
           <span className="font-semibold">{t.services.titleStrong}</span>
           {t.services.titleTail ? ` ${t.services.titleTail}` : null}
@@ -298,25 +253,43 @@ export function Services({ t }: { t: Dictionary }) {
             key={s.title}
             className="group w-[78vw] shrink-0 snap-start bg-background sm:w-[52vw] lg:w-[38vw] xl:w-[34rem]"
           >
-            <div className="overflow-hidden">
-              <div className="transition duration-500 group-hover:scale-[1.03]">
-                <ServiceArt kind={ART[i]} alt={[t.services.adsAlt, t.services.webAlt, undefined][i]} />
+            {/* The whole card is the link, so the image and the copy share one target. */}
+            <Link href={href(lang, `/services/${SERVICE_SLUGS[i]}`)} className="block">
+              <div className="overflow-hidden">
+                <div className="transition duration-500 group-hover:scale-[1.03]">
+                  <ServiceArt
+                    index={i}
+                    alt={[t.services.adsAlt, t.services.webAlt, t.services.marketingAlt][i]}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="border-t border-line px-6 py-7">
-              <div className="flex items-baseline justify-between gap-4">
-                <h3 className="text-[19px] font-medium">{s.title}</h3>
-                <span dir="ltr" className="text-[19px] text-muted">
-                  0{i + 1}
+              <div className="border-t border-line px-6 py-7">
+                <div className="flex items-baseline justify-between gap-4">
+                  <h3 className="text-[19px] font-medium transition group-hover:text-primary">
+                    {s.title}
+                  </h3>
+                  <span dir="ltr" className="text-[19px] text-muted">
+                    0{i + 1}
+                  </span>
+                </div>
+                <p className="mt-3 max-w-[34ch] text-[13px] leading-relaxed text-muted">
+                  {s.desc}
+                </p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-medium">
+                  {t.services.learnMore}
+                  <ArrowRight className="size-3.5 transition group-hover:translate-x-0.5 rtl:rotate-180 rtl:group-hover:-translate-x-0.5" />
                 </span>
               </div>
-              <p className="mt-3 max-w-[34ch] text-[13px] leading-relaxed text-muted">
-                {s.desc}
-              </p>
-            </div>
+            </Link>
           </article>
         ))}
       </div>
+
+      <Container className="mt-10 text-center">
+        <PrimaryButton href={href(lang, "/portfolio")} withArrow>
+          {t.services.seeMore}
+        </PrimaryButton>
+      </Container>
     </section>
   );
 }
@@ -331,51 +304,24 @@ export function WorkBanner({ lang, t }: P) {
 
       <Container className="relative grid items-center gap-12 py-20 lg:grid-cols-[0.85fr_1.15fr] lg:py-24">
         <div>
-          <h2 className="max-w-sm text-[30px] leading-[1.15] font-light tracking-tight sm:text-[38px]">
-            {t.banner.titleLead}{" "}
+          <h2 className="reveal max-w-sm text-[30px] leading-[1.15] font-light tracking-tight sm:text-[38px]">
+            {t.banner.titleLead}
+            <br />
             <span className="font-semibold">{t.banner.titleStrong}</span>
           </h2>
           <p className="mt-5 text-[14px] text-muted">{t.banner.body}</p>
         </div>
 
-        <div className="relative flex items-end justify-center gap-4">
-          {/* Live campaign dashboard */}
-          <div aria-hidden className="w-[58%]">
-            <div className="rounded-lg border border-line bg-background p-2 shadow-xl shadow-ink/10">
-              <div className="aspect-[16/10] overflow-hidden rounded bg-gradient-to-br from-primary-soft via-background to-secondary-soft p-3">
-                <div className="mb-2 flex items-center justify-between">
-                  <div className="h-1.5 w-1/4 rounded bg-primary/70" />
-                  <div className="h-1.5 w-8 rounded bg-secondary" />
-                </div>
-                <div className="flex h-12 items-end gap-1.5">
-                  {[35, 55, 45, 70, 60, 85, 100].map((h, i) => (
-                    <span
-                      key={i}
-                      className="flex-1 rounded-t bg-primary/45"
-                      style={{ height: `${h}%` }}
-                    />
-                  ))}
-                </div>
-                <div className="mt-2 h-4 rounded bg-background/80" />
-              </div>
-            </div>
-            <div className="mx-auto h-5 w-10 bg-line" />
-            <div className="mx-auto h-1.5 w-28 rounded-full bg-line" />
-          </div>
-
-          {/* Mobile placement preview */}
-          <div aria-hidden className="w-[38%] pb-1">
-            <div className="rounded-t-md border border-b-0 border-line bg-background p-1.5">
-              <div className="aspect-[16/10] overflow-hidden rounded-sm bg-ink p-2">
-                <div className="space-y-1.5">
-                  <div className="h-1 w-2/3 rounded bg-primary/70" />
-                  <div className="h-1 w-1/2 rounded bg-white/25" />
-                  <div className="h-6 rounded bg-white/10" />
-                  <div className="h-1 w-3/5 rounded bg-secondary/70" />
-                </div>
-              </div>
-            </div>
-            <div className="h-1.5 rounded-b-md bg-line" />
+        <div className="relative">
+          {/* Transparent WebP: the section's wash stays visible behind the screenshot. */}
+          <div className="relative aspect-[16/9]">
+            <Image
+              src="/report.webp"
+              alt={t.banner.imageAlt}
+              fill
+              sizes="(min-width: 1024px) 620px, 100vw"
+              className="object-contain"
+            />
           </div>
 
           <div className="group absolute -top-4 end-0 origin-top scale-[0.72] sm:scale-100 lg:-top-10">
@@ -401,7 +347,7 @@ export function Process({ lang, t }: P) {
     <section id="process" className="scroll-mt-16 py-24 lg:py-32">
       <Container className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div>
-          <h2 className="max-w-xs text-[32px] leading-[1.15] font-light tracking-tight sm:text-[38px]">
+          <h2 className="reveal max-w-xs text-[32px] leading-[1.15] font-light tracking-tight sm:text-[38px]">
             {t.process.titleLead}{" "}
             <span className="font-semibold">{t.process.titleStrong}</span>{" "}
             {t.process.titleTail}
@@ -414,11 +360,11 @@ export function Process({ lang, t }: P) {
           </PrimaryButton>
         </div>
 
-        <ul className="border-t border-line">
+        <ul className="reveal-stagger border-t border-line">
           {t.process.steps.map((s, i) => (
             <li
               key={s.title}
-              className="group relative border-b border-line transition hover:bg-secondary-soft"
+              className="reveal group relative border-b border-line transition hover:bg-secondary-soft"
             >
               <div className="flex items-start gap-6 px-4 py-6">
                 <span dir="ltr" className="w-6 pt-0.5 text-[13px] text-muted">
@@ -464,63 +410,105 @@ export function Process({ lang, t }: P) {
   );
 }
 
-/* ----------------------------------------------------------------- Marquee */
+/* ----------------------------------------------------------------- Clients */
 
-function Circle({ children }: { children: React.ReactNode }) {
+/**
+ * In the order of public/client. Four of these logos ship on a solid white
+ * background, so every one sits on a white tile rather than straight on the page.
+ */
+const CLIENTS = [
+  { file: "01. Unilever.png", name: "Unilever" },
+  { file: "02. LOGO VASELINE.png", name: "Vaseline" },
+  { file: "03. LOGO DOVE.png", name: "Dove" },
+  { file: "04. LOGO PEPSODENT.webp", name: "Pepsodent" },
+  { file: "05. LOGO RINSO.webp", name: "Rinso" },
+  { file: "06. LOGO ADIDAS.png", name: "Adidas" },
+  { file: "07. LOGO KALBE.webp", name: "Kalbe" },
+  { file: "08. LOGO PROMAG.png", name: "Promag" },
+  { file: "09. LOGO WAROENG STEAK.jpg", name: "Waroeng Steak" },
+  { file: "10. LOGO SPRINGHILL.jpeg", name: "Springhill" },
+  { file: "11. LOGO NATA SOLUSI.jpg", name: "Nata Solusi" },
+  { file: "12. LOGO CHINESERD.png", name: "Chinese RD" },
+  { file: "13. LOGO BARBURGER.png", name: "Barburger" },
+  { file: "14. LOGO SENSWELL.webp", name: "Senswell" },
+];
+
+/** Grey by default so the row stays quiet; colour returns on hover. */
+function LogoTile({ file }: { file: string }) {
   return (
-    <span className="grid size-16 shrink-0 place-items-center rounded-full border border-line text-primary sm:size-20">
-      {children}
-    </span>
+    <li className="relative h-20 w-36 shrink-0 rounded-2xl bg-white shadow-sm shadow-ink/5 transition duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-ink/10 sm:h-24 sm:w-44">
+      <Image
+        src={`/client/${encodeURIComponent(file)}`}
+        alt=""
+        fill
+        sizes="176px"
+        className="object-contain p-4 grayscale transition duration-500 group-hover/clients:grayscale-0 sm:p-5"
+      />
+    </li>
   );
 }
 
-function RowOne({ t }: { t: Dictionary }) {
+/**
+ * Four copies of the group: the keyframes shift the track by -50%, so each half
+ * has to be identical and wider than the viewport for the loop to be seamless.
+ */
+function ClientTrack({
+  items,
+  reverse = false,
+  duration,
+}: {
+  items: typeof CLIENTS;
+  reverse?: boolean;
+  duration: string;
+}) {
   return (
-    <div className="flex shrink-0 items-center gap-10 pe-10 text-[44px] font-light tracking-tight sm:text-[58px]">
-      <span>{t.marquee.word1}</span>
-      <Circle>
-        <Megaphone className="size-7 rtl:-scale-x-100" />
-      </Circle>
-      <span>{t.marquee.word2}</span>
+    <div
+      className={`flex w-max animate-marquee ${reverse ? "[animation-direction:reverse]" : ""}`}
+      style={{ animationDuration: duration }}
+    >
+      {[0, 1, 2, 3].map((copy) => (
+        <ul key={copy} aria-hidden className="flex shrink-0 items-center gap-4 pe-4">
+          {items.map((c) => (
+            <LogoTile key={c.file} file={c.file} />
+          ))}
+        </ul>
+      ))}
     </div>
   );
 }
 
-function RowTwo({ t }: { t: Dictionary }) {
-  return (
-    <div className="flex shrink-0 items-center gap-10 pe-10 text-[44px] font-light tracking-tight sm:text-[58px]">
-      <Circle>
-        <Target className="size-7" />
-      </Circle>
-      <span>{t.marquee.word3}</span>
-      <span className="max-w-[22rem] rounded-full border border-line px-7 py-4 text-[12px] leading-relaxed text-muted">
-        {t.marquee.note}
-      </span>
-      <Circle>
-        <Cursor className="size-7 text-secondary rtl:-scale-x-100" />
-      </Circle>
-    </div>
-  );
-}
+export function Clients({ t }: { t: Dictionary }) {
+  const half = Math.ceil(CLIENTS.length / 2);
 
-export function Marquee({ t }: { t: Dictionary }) {
   return (
-    <section aria-label={t.marquee.label} className="border-y border-line py-4">
-      <div className="flex overflow-hidden border-b border-line py-6">
-        <div className="flex animate-marquee">
-          <RowOne t={t} />
-          <RowOne t={t} />
-          <RowOne t={t} />
-          <RowOne t={t} />
-        </div>
+    <section
+      aria-label={`${t.clients.titleLead} ${t.clients.titleStrong}`.trim()}
+      className="clients group/clients overflow-hidden bg-gradient-to-b from-background via-surface to-background py-16 lg:py-24"
+    >
+      <Container>
+        <h2 className="reveal text-center text-[28px] leading-tight font-light tracking-tight sm:text-[34px]">
+          {t.clients.titleLead}{" "}
+          <span className="font-semibold">{t.clients.titleStrong}</span>
+        </h2>
+      </Container>
+
+      {/* Two rows at different speeds and directions, so the strip has some depth. */}
+      <div className="marquee-fade mt-12 space-y-4 motion-reduce:hidden">
+        <ClientTrack items={CLIENTS.slice(0, half)} duration="42s" />
+        <ClientTrack items={CLIENTS.slice(half)} reverse duration="56s" />
       </div>
-      <div className="flex overflow-hidden py-6">
-        <div className="flex animate-marquee [animation-direction:reverse]">
-          <RowTwo t={t} />
-          <RowTwo t={t} />
-          <RowTwo t={t} />
-        </div>
-      </div>
+
+      {/* Nothing moves when reduced motion is asked for, so the logos sit still. */}
+      <Container className="mt-12 hidden motion-reduce:block">
+        <ul className="flex flex-wrap items-center justify-center gap-4">
+          {CLIENTS.map((c) => (
+            <LogoTile key={c.file} file={c.file} />
+          ))}
+        </ul>
+      </Container>
+
+      {/* The rows above are decorative; this keeps the names available to a screen reader. */}
+      <p className="sr-only">{CLIENTS.map((c) => c.name).join(", ")}</p>
     </section>
   );
 }
@@ -534,11 +522,11 @@ export function Cta({ t }: { t: Dictionary }) {
       <Glow className="top-1/2 right-[-10rem] size-[420px] -translate-y-1/2 opacity-70" />
 
       <Container className="relative py-24 text-center lg:py-32">
-        <h2 className="text-[32px] leading-tight font-light tracking-tight sm:text-[40px]">
+        <h2 className="reveal text-[32px] leading-tight font-light tracking-tight sm:text-[40px]">
           {t.cta.titleLead} <span className="font-semibold">{t.cta.titleStrong}</span>{" "}
           {t.cta.titleTail}
         </h2>
-        <p className="mx-auto mt-5 max-w-md text-[14px] leading-relaxed text-muted">
+        <p className="reveal mx-auto mt-5 max-w-md text-[14px] leading-relaxed text-muted">
           {t.cta.body}
         </p>
         <div className="mt-10">
@@ -552,60 +540,93 @@ export function Cta({ t }: { t: Dictionary }) {
 /* ------------------------------------------------------------------ Footer */
 
 export function Footer({ lang, t }: P) {
+  const columns = [
+    {
+      title: t.footer.servicesTitle,
+      items: t.services.items.map((s, i) => {
+        const slug = SERVICE_SLUGS[i];
+        return {
+          label: s.title,
+          href: slug ? href(lang, `/services/${slug}`) : href(lang, "#services"),
+        };
+      }),
+    },
+    {
+      title: t.footer.companyTitle,
+      items: [
+        { label: t.nav.about, href: href(lang, "/about") },
+        { label: t.nav.work, href: href(lang, "/portfolio") },
+        { label: t.nav.contact, href: href(lang, "#contact") },
+      ],
+    },
+  ];
+
   return (
     <footer className="border-t border-line bg-background">
-      <Container className="grid grid-cols-2 gap-x-6 gap-y-10 py-16 lg:grid-cols-[repeat(3,auto)_1fr] lg:gap-16">
-        {t.footer.columns.map((col) => (
-          <div key={col.title}>
-            <h3 className="text-[13px] font-semibold tracking-[0.12em] uppercase">
-              {col.title}
-            </h3>
-            <ul className="mt-5 space-y-3">
-              {col.items.map((i) => (
-                <li key={i}>
-                  <Link
-                    href={href(lang, "#contact")}
-                    className="inline-flex min-h-[36px] items-center text-[13px] text-muted transition hover:text-ink"
-                  >
-                    {i}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+      <Container className="grid gap-12 py-16 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
+        <div className="max-w-sm">
+          <div className="flex items-center gap-2.5">
+            <Image
+              src="/lavora-logo.webp"
+              alt=""
+              width={32}
+              height={32}
+              className="size-8 object-contain"
+            />
+            <span className="text-[16px] font-semibold tracking-tight">{t.brand}</span>
           </div>
-        ))}
 
-        <div className="col-span-2 lg:col-span-1 lg:max-w-sm lg:justify-self-end">
-          <h3 className="text-[13px] font-semibold tracking-[0.12em] uppercase">
-            {t.footer.stayUpdated}
-          </h3>
-          <div className="mt-5">
-            <Newsletter t={t.newsletter} />
-          </div>
-          <p className="mt-4 text-[11.5px] leading-relaxed text-muted">
-            {t.footer.newsletterNote}
-          </p>
+          <p className="mt-5 text-[13px] leading-relaxed text-muted">{t.footer.blurb}</p>
+
+          <ul className="mt-6 flex items-center gap-2">
+            {SOCIALS.map(({ Icon, label }) => (
+              <li key={label}>
+                <Link
+                  href={href(lang, "#contact")}
+                  aria-label={label}
+                  className="grid size-11 place-items-center rounded-lg text-ink transition hover:text-primary"
+                >
+                  <Icon className="size-[18px]" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="grid grid-cols-2 gap-8 lg:justify-self-end">
+          {columns.map((col) => (
+            <div key={col.title}>
+              <h3 className="text-[14px] font-semibold">{col.title}</h3>
+              <ul className="mt-4">
+                {col.items.map((item) => (
+                  <li key={item.label}>
+                    <Link
+                      href={item.href}
+                      className="inline-flex min-h-[38px] items-center text-[13px] text-muted transition hover:text-ink"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </Container>
 
       <Container>
-        <div className="flex flex-col gap-6 border-t border-line py-8 sm:flex-row sm:items-start sm:justify-between">
-          <div className="max-w-lg">
-            <p className="text-[13px] font-semibold">{t.footer.rights}</p>
-            <p className="mt-2 text-[11.5px] leading-relaxed text-muted">
-              {t.footer.blurb}
-            </p>
-          </div>
+        <div className="flex flex-col gap-4 border-t border-line py-7 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[12.5px] text-muted">{t.footer.rights}</p>
           <div className="flex gap-6">
             <Link
               href={href(lang, "/terms")}
-              className="text-[12px] text-muted transition hover:text-ink"
+              className="text-[12.5px] text-muted underline underline-offset-4 transition hover:text-ink"
             >
               {t.footer.terms}
             </Link>
             <Link
               href={href(lang, "/privacy")}
-              className="text-[12px] text-muted transition hover:text-ink"
+              className="text-[12.5px] text-muted underline underline-offset-4 transition hover:text-ink"
             >
               {t.footer.privacy}
             </Link>

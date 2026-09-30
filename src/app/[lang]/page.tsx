@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import {
+  Clients,
   Collaboration,
   Cta,
   Footer,
   Hero,
-  Marquee,
   Navbar,
   Process,
   Services,
@@ -23,10 +23,10 @@ export default async function Home(props: PageProps<"/[lang]">) {
       <main>
         <Hero lang={lang} t={t} />
         <Collaboration t={t} />
-        <Services t={t} />
+        <Services lang={lang} t={t} />
         <WorkBanner lang={lang} t={t} />
         <Process lang={lang} t={t} />
-        <Marquee t={t} />
+        <Clients t={t} />
         <Cta t={t} />
       </main>
       <Footer lang={lang} t={t} />
