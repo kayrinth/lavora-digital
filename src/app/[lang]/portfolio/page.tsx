@@ -11,14 +11,15 @@ const CATEGORIES = PROJECTS.map((p) => p.service).filter(
   (s, i, all) => all.indexOf(s) === i,
 );
 
+/** No "all" view: an unknown or missing ?service= lands on the first category. */
 function readService(value: string | string[] | undefined) {
   const raw = Array.isArray(value) ? value[0] : value;
-  return raw && (CATEGORIES as string[]).includes(raw) ? (raw as ServiceKey) : "all";
+  return raw && (CATEGORIES as string[]).includes(raw) ? (raw as ServiceKey) : CATEGORIES[0];
 }
 
-function heading(lang: Locale, service: ServiceKey | "all") {
+function heading(lang: Locale, service: ServiceKey) {
   const t = getDictionary(lang);
-  const doc = service === "all" ? undefined : portfolioIntros[lang][service];
+  const doc = portfolioIntros[lang][service];
   return (
     doc ?? {
       eyebrow: "",
@@ -48,7 +49,7 @@ export default async function Portfolio(props: PageProps<"/[lang]/portfolio">) {
   const active = readService(service);
   const page = heading(lang, active);
 
-  const shown = active === "all" ? PROJECTS : PROJECTS.filter((p) => p.service === active);
+  const shown = PROJECTS.filter((p) => p.service === active);
 
   const items: GridItem[] = shown.map((p) => ({
     slug: p.slug,
@@ -58,7 +59,7 @@ export default async function Portfolio(props: PageProps<"/[lang]/portfolio">) {
     title: p.title,
     subtitle: pick(p.subtitle, lang),
     logo: p.logo,
-    image: p.image,
+    image: p.gallery?.[0],
     summary: pick(p.summary, lang),
   }));
 
@@ -91,7 +92,6 @@ export default async function Portfolio(props: PageProps<"/[lang]/portfolio">) {
               active={active}
               basePath={`/${lang}/portfolio`}
               filterLabel={t.portfolio.filterLabel}
-              filterAll={t.portfolio.filterAll}
               viewLabel={t.portfolio.view}
             />
           </div>
@@ -115,6 +115,17 @@ export default async function Portfolio(props: PageProps<"/[lang]/portfolio">) {
                     {para}
                   </p>
                 ))}
+                {page.closing.items && (
+                  <ul className="reveal-stagger grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2">
+                    {page.closing.items.map((item: { title: string; desc: string }) => (
+                      <li key={item.title} className="reveal bg-background px-6 py-5">
+                        <h3 className="text-[15px] font-semibold text-ink">{item.title}</h3>
+                        <p className="mt-2 text-[13px] leading-relaxed">{item.desc}</p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
                 <p className="reveal border-s-2 border-primary ps-5 text-[15px] font-medium text-ink">
                   {page.closing.kicker}
                 </p>

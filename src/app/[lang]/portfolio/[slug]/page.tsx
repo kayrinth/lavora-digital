@@ -92,6 +92,36 @@ export default async function ProjectPage(
               ))}
             </div>
           </div>
+
+          {project.gallery && (
+            <ul
+              className={`mt-14 grid gap-4 ${
+                project.service === "web" ? "lg:grid-cols-1" : "sm:grid-cols-2"
+              }`}
+            >
+              {project.gallery.map((src) => (
+                <li
+                  key={src}
+                  /* Ads run 4:5 social creatives, website work is wide screenshots. */
+                  style={{
+                    aspectRatio:
+                      project.ratio ?? (project.service === "web" ? "16 / 9" : "4 / 5"),
+                  }}
+                  className="relative overflow-hidden rounded-2xl border border-line bg-surface"
+                >
+                  <Image
+                    src={src}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 560px, 100vw"
+                    /* Contained, not cropped: a few creatives are square, and an ad
+                       loses its message when 20% of it is cut off. */
+                    className={project.service === "web" ? "object-cover" : "object-contain"}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
         </Container>
 
         <section className="border-t border-line">

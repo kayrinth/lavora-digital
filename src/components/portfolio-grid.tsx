@@ -23,26 +23,24 @@ export function PortfolioGrid({
   active,
   basePath,
   filterLabel,
-  filterAll,
   viewLabel,
 }: {
   /** Already filtered on the server. */
   items: GridItem[];
   filters: { key: ServiceKey; label: string }[];
-  active: ServiceKey | "all";
+  active: ServiceKey;
   basePath: string;
   filterLabel: string;
-  filterAll: string;
   viewLabel: string;
 }) {
   return (
     <>
       {filters.length > 1 && (
         <nav aria-label={filterLabel} className="flex flex-wrap gap-2">
-          {[{ key: "all" as const, label: filterAll }, ...filters].map((f) => (
+          {filters.map((f) => (
             <Link
               key={f.key}
-              href={f.key === "all" ? basePath : `${basePath}?service=${f.key}`}
+              href={`${basePath}?service=${f.key}`}
               aria-current={active === f.key ? "page" : undefined}
               className={`inline-flex min-h-[44px] items-center rounded-full border px-4 text-[13px] transition ${
                 active === f.key

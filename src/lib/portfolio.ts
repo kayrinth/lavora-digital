@@ -17,7 +17,10 @@ export type Project = {
    * marks are drawn for light backgrounds. Omitted where no logo file exists.
    */
   logo?: string;
-  image?: string;
+  /** Work images. The first is the card thumbnail; all of them show on the detail page. */
+  gallery?: string[];
+  /** CSS aspect-ratio for the gallery tiles, where the files are not the usual 4:5. */
+  ratio?: string;
   summary: Localized<string>;
   body: Localized<string[]>;
   /** Rows under the title on the detail page: brands, products, platform. */
@@ -37,6 +40,8 @@ export type PortfolioIntro = {
     heading: string;
     lead: string;
     paragraphs: string[];
+    /** Capability tiles, where a category lists what it actually produces. */
+    items?: { title: string; desc: string }[];
     kicker: string;
     kickerBody?: string;
   };
@@ -83,6 +88,44 @@ export const portfolioIntros: Record<
         kicker: "Different businesses. Different challenges. One approach: build with purpose.",
       },
     },
+    marketing: {
+      eyebrow: "Project Digital Marketing",
+      title: "Visual Content Built for Brands",
+      intro: [
+        "La Vora Digital creates professional photography and video content tailored to the needs of brands and their marketing activities.",
+        "From product photography and campaign visuals to promotional videos and video series, we develop visual content that helps brands communicate their products, services, and stories across digital platforms.",
+        "Our work is built around each brand's identity and communication objectives, ensuring every visual asset is created with a clear purpose and ready to support marketing campaigns, social media, advertising, and promotional activities.",
+      ],
+      closing: {
+        heading: "Our Digital Marketing Expertise",
+        lead: "Content That Gives Brands Something to Say",
+        paragraphs: [
+          "Every brand needs visual content that fits its identity and communicates its products effectively.",
+          "From product photography and campaign visuals to promotional videos and video series, we create content designed around where and how it will be used.",
+        ],
+        items: [
+          {
+            title: "Photography",
+            desc: "Product, campaign, lifestyle, and brand photography.",
+          },
+          {
+            title: "Video Production",
+            desc: "Promotional videos, product videos, social media content, and branded video content.",
+          },
+          {
+            title: "Video Series",
+            desc: "Multiple video assets developed around a consistent concept and visual direction.",
+          },
+          {
+            title: "Campaign Content",
+            desc: "Visual assets created specifically to support advertising, promotions, launches, and digital campaigns.",
+          },
+        ],
+        kicker: "From concept to final content",
+        kickerBody:
+          "We create visual assets that help brands look better, communicate clearly, and stay relevant across digital channels.",
+      },
+    },
   },
   ar: {
     ads: {
@@ -121,6 +164,44 @@ export const portfolioIntros: Record<
         kicker: "أعمال مختلفة. تحديات مختلفة. منهج واحد: ابنِ بهدف.",
       },
     },
+    marketing: {
+      eyebrow: "مشاريع التسويق الرقمي",
+      title: "محتوى بصري مصنوع للعلامات",
+      intro: [
+        "تصنع لا فورا ديجيتال محتوى تصوير فوتوغرافي وفيديو احترافيًا، مفصّلًا على احتياجات العلامات وأنشطتها التسويقية.",
+        "من تصوير المنتجات ومرئيات الحملات إلى الفيديوهات الترويجية وسلاسل الفيديو، نطوّر محتوى بصريًا يساعد العلامات على التعبير عن منتجاتها وخدماتها وقصصها عبر المنصات الرقمية.",
+        "يُبنى عملنا حول هوية كل علامة وأهدافها في التواصل، بما يضمن أن كل أصل بصري يُصنع بهدف واضح وجاهز لدعم الحملات التسويقية ووسائل التواصل والإعلانات والأنشطة الترويجية.",
+      ],
+      closing: {
+        heading: "خبرتنا في التسويق الرقمي",
+        lead: "محتوى يمنح العلامات ما تقوله",
+        paragraphs: [
+          "كل علامة تحتاج محتوى بصريًا يناسب هويتها ويعبّر عن منتجاتها بفعالية.",
+          "من تصوير المنتجات ومرئيات الحملات إلى الفيديوهات الترويجية وسلاسل الفيديو، نصنع محتوى مصممًا حول أين وكيف سيُستخدم.",
+        ],
+        items: [
+          {
+            title: "التصوير الفوتوغرافي",
+            desc: "تصوير المنتجات والحملات ونمط الحياة والعلامة.",
+          },
+          {
+            title: "إنتاج الفيديو",
+            desc: "فيديوهات ترويجية وفيديوهات منتجات ومحتوى لوسائل التواصل ومحتوى فيديو للعلامة.",
+          },
+          {
+            title: "سلاسل الفيديو",
+            desc: "أصول فيديو متعددة مطوّرة حول فكرة وتوجه بصري متسقين.",
+          },
+          {
+            title: "محتوى الحملات",
+            desc: "أصول بصرية تُصنع خصيصًا لدعم الإعلانات والعروض والإطلاقات والحملات الرقمية.",
+          },
+        ],
+        kicker: "من الفكرة إلى المحتوى النهائي",
+        kickerBody:
+          "نصنع أصولًا بصرية تساعد العلامات على أن تبدو أفضل، وتتواصل بوضوح، وتبقى حاضرة عبر القنوات الرقمية.",
+      },
+    },
   },
 };
 
@@ -130,6 +211,10 @@ const META_ADS = { en: "Meta Ads", ar: "إعلانات ميتا" };
 export const PROJECTS: Project[] = [
   {
     slug: "unilever-indonesia",
+    gallery: [
+      "/iklan/unilever.jpg",
+      "/iklan/unilever2.jpg",
+    ],
     service: "ads",
     title: "Unilever Indonesia",
     subtitle: {
@@ -164,6 +249,10 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "adidas",
+    gallery: [
+      "/iklan/adidas.jpg",
+      "/iklan/adidas2.jpg",
+    ],
     service: "ads",
     title: "Adidas",
     subtitle: {
@@ -198,6 +287,10 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "kalbe-promag",
+    gallery: [
+      "/iklan/kalbe.jpg",
+      "/iklan/kalbe2.jpg",
+    ],
     service: "ads",
     title: "Kalbe",
     subtitle: { en: "Promag Meta Advertising", ar: "إعلانات ميتا لبروماغ" },
@@ -229,6 +322,10 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "waroeng-steak",
+    gallery: [
+      "/iklan/waroeng-steak.jpg",
+      "/iklan/waroeng-steak2.jpg",
+    ],
     service: "ads",
     title: "Waroeng Steak",
     subtitle: {
@@ -263,6 +360,10 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "springhill",
+    gallery: [
+      "/iklan/springhill.jpg",
+      "/iklan/springhill2.jpg",
+    ],
     service: "ads",
     title: "Springhill",
     subtitle: {
@@ -299,6 +400,10 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "nata-solusi",
+    gallery: [
+      "/iklan/nata.png",
+      "/iklan/nata2.png",
+    ],
     service: "ads",
     title: "Nata Solusi",
     subtitle: {
@@ -339,6 +444,10 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "chineserd",
+    gallery: [
+      "/iklan/chineserd.jpg",
+      "/iklan/chineserd2.jpg",
+    ],
     service: "ads",
     title: "ChineseRd",
     subtitle: {
@@ -375,6 +484,10 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "barburger",
+    gallery: [
+      "/iklan/barburger.jpg",
+      "/iklan/barburger2.jpg",
+    ],
     service: "ads",
     title: "Barburger",
     subtitle: { en: "Burger Product Advertising", ar: "إعلانات منتجات برغر" },
@@ -408,6 +521,10 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "senswell",
+    gallery: [
+      "/iklan/senswell.jpg",
+      "/iklan/senswell2.jpg",
+    ],
     service: "ads",
     title: "Senswell",
     subtitle: { en: "Perfume Product Advertising", ar: "إعلانات منتجات عطور" },
@@ -441,10 +558,12 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "borch-and-co",
+    gallery: [
+      "/website/borch.png",
+    ],
     service: "web",
     title: "Borch & Co",
     subtitle: { en: "E Commerce Website", ar: "متجر إلكتروني" },
-    image: "/services/web.webp",
     summary: {
       en: "A refined online shopping experience for a Sydney based jewellery brand specialising in bracelets.",
       ar: "تجربة تسوق إلكتروني أنيقة لعلامة مجوهرات من سيدني متخصصة في الأساور.",
@@ -474,13 +593,15 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "chineserd-platform",
+    gallery: [
+      "/website/chinesred.png",
+    ],
     service: "web",
     title: "ChineseRd",
     subtitle: {
       en: "Online Mandarin Learning Platform",
       ar: "منصة تعلّم الماندرين عبر الإنترنت",
     },
-    logo: "/client/12. LOGO CHINESERD.png",
     summary: {
       en: "A digital experience that communicates an online Mandarin learning offering to prospective students.",
       ar: "تجربة رقمية تعرّف الطلاب المرتقبين بعرض تعلّم الماندرين عبر الإنترنت.",
@@ -510,6 +631,9 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "sando",
+    gallery: [
+      "/website/sando.png",
+    ],
     service: "web",
     title: "Sando",
     subtitle: {
@@ -545,6 +669,9 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "indo-karya-tangguh",
+    gallery: [
+      "/website/ikat.png",
+    ],
     service: "web",
     title: "Indo Karya Tangguh",
     subtitle: { en: "Corporate Digital Presence", ar: "حضور رقمي مؤسسي" },
@@ -577,6 +704,9 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "harmony-dental-clinic",
+    gallery: [
+      "/website/harmony-dental.png",
+    ],
     service: "web",
     title: "Harmony Dental Clinic",
     subtitle: {
@@ -612,13 +742,15 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "nata-solusi-pratama",
+    gallery: [
+      "/website/nata-solusi.png",
+    ],
     service: "web",
     title: "Nata Solusi Pratama",
     subtitle: {
       en: "Technology & Digital Solutions Platform",
       ar: "منصة حلول تقنية ورقمية",
     },
-    logo: "/client/11. LOGO NATA SOLUSI.jpg",
     summary: {
       en: "A platform presenting technology solutions including a Regional Tax Application and Smart Classroom Solution.",
       ar: "منصة تعرض حلولًا تقنية منها تطبيق الضرائب الإقليمية وحل الفصل الذكي.",
@@ -643,6 +775,299 @@ export const PROJECTS: Project[] = [
         { label: "العلامة", value: "Nata Solusi Pratama" },
         { label: "القطاع", value: "التقنية والحلول الرقمية" },
         { label: "المشروع", value: "بروفايل شركة ونظام ويب" },
+      ],
+    },
+  },
+  {
+    slug: "yamaha-motor",
+    gallery: [
+      "/marketing/yamaha.jpeg",
+      "/marketing/yamaha2.jpeg",
+    ],
+    ratio: "16 / 11",
+    service: "marketing",
+    title: "Yamaha Motor",
+    subtitle: { en: "Photography for Annual Calendar", ar: "تصوير للتقويم السنوي" },
+    summary: {
+      en: "A dedicated photography project producing visual assets for an annual calendar.",
+      ar: "مشروع تصوير مخصص لإنتاج أصول بصرية لتقويم سنوي.",
+    },
+    body: {
+      en: [
+        "A dedicated photography project created for Yamaha Motor to produce visual assets for its annual calendar.",
+        "The production focused on creating high quality imagery that represented the brand and its products while maintaining a consistent visual direction throughout the calendar.",
+      ],
+      ar: [
+        "مشروع تصوير مخصص صُنع لـ Yamaha Motor لإنتاج أصول بصرية لتقويمها السنوي.",
+        "ركّز الإنتاج على صنع صور عالية الجودة تمثّل العلامة ومنتجاتها، مع الحفاظ على توجه بصري متسق عبر التقويم كاملًا.",
+      ],
+    },
+    meta: {
+      en: [
+        { label: "Brand", value: "Yamaha Motor" },
+        { label: "Industry", value: "Automotive & Motorcycle" },
+        { label: "Project", value: "Photography" },
+        { label: "Purpose", value: "Annual Calendar" },
+      ],
+      ar: [
+        { label: "العلامة", value: "Yamaha Motor" },
+        { label: "القطاع", value: "السيارات والدراجات النارية" },
+        { label: "المشروع", value: "تصوير فوتوغرافي" },
+        { label: "الغرض", value: "تقويم سنوي" },
+      ],
+    },
+  },
+  {
+    slug: "make-over",
+    gallery: [
+      "/marketing/makeover.jpg",
+      "/marketing/makeover2.jpg",
+    ],
+    service: "marketing",
+    title: "Make Over",
+    subtitle: { en: "Photography & Video Production", ar: "تصوير فوتوغرافي وإنتاج فيديو" },
+    summary: {
+      en: "Photography and video supporting the brand's marketing and promotional needs.",
+      ar: "تصوير وفيديو يدعمان احتياجات العلامة التسويقية والترويجية.",
+    },
+    body: {
+      en: [
+        "A visual content production for Make Over, covering both photography and video to support the brand's marketing and promotional needs.",
+        "The content was created to showcase the brand and its products through polished visual assets suitable for digital communication and promotional activities.",
+      ],
+      ar: [
+        "إنتاج محتوى بصري لـ Make Over، يشمل التصوير الفوتوغرافي والفيديو لدعم احتياجات العلامة التسويقية والترويجية.",
+        "صُنع المحتوى لإبراز العلامة ومنتجاتها عبر أصول بصرية متقنة تناسب التواصل الرقمي والأنشطة الترويجية.",
+      ],
+    },
+    meta: {
+      en: [
+        { label: "Brand", value: "Make Over" },
+        { label: "Industry", value: "Beauty & Cosmetics" },
+        { label: "Project", value: "Photography & Video" },
+      ],
+      ar: [
+        { label: "العلامة", value: "Make Over" },
+        { label: "القطاع", value: "الجمال ومستحضرات التجميل" },
+        { label: "المشروع", value: "تصوير وفيديو" },
+      ],
+    },
+  },
+  {
+    slug: "samsung",
+    gallery: [
+      "/marketing/samsung.webp",
+      "/marketing/samsung2.avif",
+    ],
+    service: "marketing",
+    title: "Samsung",
+    subtitle: { en: "Smartphone Photography & Video", ar: "تصوير وفيديو للهواتف الذكية" },
+    summary: {
+      en: "Photography and video production highlighting a smartphone and its features.",
+      ar: "تصوير وإنتاج فيديو يبرزان الهاتف الذكي ومزاياه.",
+    },
+    body: {
+      en: [
+        "Visual content created for Samsung smartphones, combining photography and video production to highlight the product and its features.",
+        "The production focused on creating engaging visual assets that could be adapted for digital marketing and promotional communication.",
+      ],
+      ar: [
+        "محتوى بصري صُنع لهواتف Samsung الذكية، يجمع التصوير الفوتوغرافي وإنتاج الفيديو لإبراز المنتج ومزاياه.",
+        "ركّز الإنتاج على صنع أصول بصرية جذابة يمكن تكييفها للتسويق الرقمي والتواصل الترويجي.",
+      ],
+    },
+    meta: {
+      en: [
+        { label: "Brand", value: "Samsung" },
+        { label: "Industry", value: "Technology & Consumer Electronics" },
+        { label: "Project", value: "Photography & Video" },
+      ],
+      ar: [
+        { label: "العلامة", value: "Samsung" },
+        { label: "القطاع", value: "التقنية والإلكترونيات الاستهلاكية" },
+        { label: "المشروع", value: "تصوير وفيديو" },
+      ],
+    },
+  },
+  {
+    slug: "aquaproof",
+    gallery: [
+      "/marketing/aquaproof.png",
+      "/marketing/aquaproof2.png",
+    ],
+    service: "marketing",
+    title: "Aquaproof",
+    subtitle: { en: "Video Series", ar: "سلسلة فيديو" },
+    summary: {
+      en: "A series of promotional videos built around a consistent video format.",
+      ar: "سلسلة فيديوهات ترويجية مبنية على صيغة فيديو متسقة.",
+    },
+    body: {
+      en: [
+        "A series of promotional videos created for Aquaproof, designed to communicate the product and brand through a consistent video format.",
+        "The project focused on developing multiple video assets that could be used across digital channels and promotional campaigns.",
+      ],
+      ar: [
+        "سلسلة فيديوهات ترويجية صُنعت لـ Aquaproof، مصممة للتعبير عن المنتج والعلامة عبر صيغة فيديو متسقة.",
+        "ركّز المشروع على تطوير أصول فيديو متعددة يمكن استخدامها عبر القنوات الرقمية والحملات الترويجية.",
+      ],
+    },
+    meta: {
+      en: [
+        { label: "Brand", value: "Aquaproof" },
+        { label: "Industry", value: "Building Materials" },
+        { label: "Project", value: "Video Series" },
+      ],
+      ar: [
+        { label: "العلامة", value: "Aquaproof" },
+        { label: "القطاع", value: "مواد البناء" },
+        { label: "المشروع", value: "سلسلة فيديو" },
+      ],
+    },
+  },
+  {
+    slug: "abc-battery",
+    gallery: [
+      "/marketing/abc.png",
+      "/marketing/abc2.png",
+    ],
+    ratio: "5 / 4",
+    service: "marketing",
+    title: "ABC Battery",
+    subtitle: { en: "Promotional Video", ar: "فيديو ترويجي" },
+    summary: {
+      en: "Promotional content communicating the product and its key attributes.",
+      ar: "محتوى ترويجي يعبّر عن المنتج وخصائصه الأساسية.",
+    },
+    body: {
+      en: [
+        "A video production project for ABC Battery, creating promotional content designed to communicate the product and its key attributes through engaging visual storytelling.",
+      ],
+      ar: [
+        "مشروع إنتاج فيديو لـ ABC Battery، بصنع محتوى ترويجي مصمم للتعبير عن المنتج وخصائصه الأساسية عبر سرد بصري جذاب.",
+      ],
+    },
+    meta: {
+      en: [
+        { label: "Brand", value: "ABC Battery" },
+        { label: "Industry", value: "Automotive & Battery" },
+        { label: "Project", value: "Video Production" },
+      ],
+      ar: [
+        { label: "العلامة", value: "ABC Battery" },
+        { label: "القطاع", value: "السيارات والبطاريات" },
+        { label: "المشروع", value: "إنتاج فيديو" },
+      ],
+    },
+  },
+  {
+    slug: "lemonilo",
+    gallery: [
+      "/marketing/lemonilo.jpg",
+      "/marketing/lemonilo2.jpg",
+    ],
+    ratio: "1 / 1",
+    service: "marketing",
+    title: "Lemonilo",
+    subtitle: { en: "Digital Video Content", ar: "محتوى فيديو رقمي" },
+    summary: {
+      en: "Video content supporting digital marketing and promotional activities.",
+      ar: "محتوى فيديو يدعم التسويق الرقمي والأنشطة الترويجية.",
+    },
+    body: {
+      en: [
+        "Video content created for Lemonilo to support its digital marketing and promotional activities.",
+        "The production focused on creating engaging visual content that communicates the brand and its products in a format suitable for digital platforms.",
+      ],
+      ar: [
+        "محتوى فيديو صُنع لـ Lemonilo لدعم تسويقها الرقمي وأنشطتها الترويجية.",
+        "ركّز الإنتاج على صنع محتوى بصري جذاب يعبّر عن العلامة ومنتجاتها بصيغة تناسب المنصات الرقمية.",
+      ],
+    },
+    meta: {
+      en: [
+        { label: "Brand", value: "Lemonilo" },
+        { label: "Industry", value: "Food & Consumer Goods" },
+        { label: "Project", value: "Video Production" },
+      ],
+      ar: [
+        { label: "العلامة", value: "Lemonilo" },
+        { label: "القطاع", value: "الأغذية والسلع الاستهلاكية" },
+        { label: "المشروع", value: "إنتاج فيديو" },
+      ],
+    },
+  },
+  {
+    slug: "waroeng-steak-video",
+    gallery: [
+      "/marketing/waroengsteak.jpg",
+      "/marketing/waroengsteak2.jpg",
+    ],
+    ratio: "1 / 1",
+    service: "marketing",
+    title: "Waroeng Steak",
+    subtitle: { en: "Food & Promotional Video", ar: "فيديو طعام وترويج" },
+    logo: "/client/09. LOGO WAROENG STEAK.jpg",
+    summary: {
+      en: "Appetising promotional video content built around the brand's food offerings.",
+      ar: "محتوى فيديو ترويجي شهي مبني حول عروض الطعام لدى العلامة.",
+    },
+    body: {
+      en: [
+        "A promotional video project for Waroeng Steak, focusing on creating appetising and engaging visual content around its food offerings.",
+        "The content was designed to support the brand's digital presence and promotional communication across online channels.",
+      ],
+      ar: [
+        "مشروع فيديو ترويجي لـ Waroeng Steak، بالتركيز على صنع محتوى بصري شهي وجذاب حول عروض طعامها.",
+        "صُمم المحتوى لدعم الحضور الرقمي للعلامة وتواصلها الترويجي عبر القنوات الإلكترونية.",
+      ],
+    },
+    meta: {
+      en: [
+        { label: "Brand", value: "Waroeng Steak" },
+        { label: "Industry", value: "Food & Restaurant" },
+        { label: "Project", value: "Video Production" },
+      ],
+      ar: [
+        { label: "العلامة", value: "Waroeng Steak" },
+        { label: "القطاع", value: "الأغذية والمطاعم" },
+        { label: "المشروع", value: "إنتاج فيديو" },
+      ],
+    },
+  },
+  {
+    slug: "borch-and-co-visual",
+    gallery: [
+      "/marketing/borch.webp",
+      "/marketing/borch2.webp",
+    ],
+    service: "marketing",
+    title: "Borch & Co",
+    subtitle: { en: "Jewellery Photography & Video", ar: "تصوير وفيديو مجوهرات" },
+    summary: {
+      en: "Refined imagery and video showcasing a Sydney jewellery brand's products.",
+      ar: "صور وفيديو أنيقة تبرز منتجات علامة مجوهرات من سيدني.",
+    },
+    body: {
+      en: [
+        "A combination of photography and video production for Borch & Co, a jewellery brand from Sydney.",
+        "The visual content was created to showcase the brand's products through refined imagery and video suitable for digital marketing, product presentation, and promotional activities.",
+      ],
+      ar: [
+        "مزيج من التصوير الفوتوغرافي وإنتاج الفيديو لـ Borch & Co، علامة مجوهرات من سيدني.",
+        "صُنع المحتوى البصري لإبراز منتجات العلامة عبر صور وفيديو أنيقة تناسب التسويق الرقمي وعرض المنتجات والأنشطة الترويجية.",
+      ],
+    },
+    meta: {
+      en: [
+        { label: "Brand", value: "Borch & Co" },
+        { label: "Industry", value: "Jewellery & Fashion" },
+        { label: "Project", value: "Photography & Video" },
+      ],
+      ar: [
+        { label: "العلامة", value: "Borch & Co" },
+        { label: "القطاع", value: "المجوهرات والأزياء" },
+        { label: "المشروع", value: "تصوير وفيديو" },
       ],
     },
   },
